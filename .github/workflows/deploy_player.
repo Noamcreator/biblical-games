@@ -1,0 +1,85 @@
+name: Deploy Player App to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'apps/player/**'
+      - 'packages/**'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.22.0'
+          channel: 'stable'
+
+      # Génère firebase_options.dart depuis les secrets GitHub
+      - name: Write Firebase options
+        run: |
+          cat > apps/player/lib/firebase_options.dart << 'EOF'
+          import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
+          import 'package:flutter/foundation.dart' show defaultTargetPlatform, kIsWeb, TargetPlatform;
+
+          class DefaultFirebaseOptions {
+            static FirebaseOptions get currentPlatform {
+              if (kIsWeb) return web;
+              throw UnsupportedError('Only web is supported in this build.');
+            }
+            static const FirebaseOptions web = FirebaseOptions(
+              apiKey: '${{ secrets.FIREBASE_API_KEY }}',
+              appId: '${{ secrets.FIREBASE_APP_ID }}',
+              messagingSenderId: '${{ secrets.FIREBASE_SENDER_ID }}',
+              projectId: '${{ secrets.FIREBASE_PROJECT_ID }}',
+              authDomain: '${{ secrets.FIREBASE_AUTH_DOMAIN }}',
+              storageBucket: '${{ secrets.FIREBASE_STORAGE_BUCKET }}',
+            );
+          }
+          EOF
+
+      - name: Install deps (core)
+        run: cd packages/core && flutter pub get
+
+      - name: Install deps (ui_components)
+        run: cd packages/ui_components && flutter pub get
+
+      - name: Install deps (player)
+        run: cd apps/player && flutter pub get
+
+      - name: Build Flutter Web
+        run: |
+          cd apps/player
+          flutter build web \
+            --release \
+            --base-href /biblical-games/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/player/build/web
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
