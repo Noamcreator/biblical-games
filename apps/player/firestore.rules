@@ -1,0 +1,33 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ── Sessions ────────────────────────────────────────────────
+    match /sessions/{sessionCode} {
+      // Tout le monde peut lire (pour rejoindre avec le code)
+      allow read: if true;
+
+      // Seuls les utilisateurs authentifiés peuvent créer
+      allow create: if request.auth != null;
+
+      // Mise à jour : soit le master (contrôle jeu), soit un joueur (rejoindre/répondre)
+      allow update: if request.auth != null;
+
+      // Réponses des joueurs
+      match /answers/{answerId} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null
+          && request.auth.uid == request.resource.data.playerId;
+        allow update, delete: if false; // immuable
+      }
+    }
+
+    // ── Questions (bibliothèque de contenu) ─────────────────────
+    match /questions/{questionId} {
+      allow read: if true;
+      // Écriture réservée aux admins (via Firebase Console ou Cloud Functions)
+      allow write: if false;
+    }
+  }
+}

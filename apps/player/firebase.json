@@ -1,0 +1,17 @@
+{
+    "firestore": {
+      "rules": "firestore.rules"
+    },
+    "flutter": {
+      "platforms": {
+        "dart": {
+          "lib/firebase_options.dart": {
+            "projectId": "biblical-games",
+            "configurations": {
+              "web": "1:756742084141:web:e89f3c9abda819c7ca4aa4"
+            }
+          }
+        }
+      }
+    }
+  }

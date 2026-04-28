@@ -1,0 +1,27 @@
+name: core
+description: Modèles, services Firebase et logique partagés pour les jeux bibliques.
+version: 0.0.1
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: ^4.7.0
+  cloud_firestore: ^6.3.0
+  firebase_auth: ^6.4.0
+  firebase_storage: ^13.3.0
+  equatable: ^2.0.8
+  uuid: ^4.5.3
+
+flutter:
+  assets:
+    - assets/data/
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0

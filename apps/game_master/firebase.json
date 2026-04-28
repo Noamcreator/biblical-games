@@ -1,0 +1,8 @@
+{
+    "firestore": {
+      "rules": "firestore.rules"
+    },
+    "flutter":{"platforms":{"android":{"default":{"projectId":"biblical-games","appId":"1:756742084141:android:d1c01faa0e2b7cd6ca4aa4","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"biblical-games","configurations":{"android":"1:756742084141:android:d1c01faa0e2b7cd6ca4aa4","ios":"1:756742084141:ios:fd4acab4680b4c78ca4aa4","macos":"1:756742084141:ios:fd4acab4680b4c78ca4aa4","windows":"1:756742084141:web:e89f3c9abda819c7ca4aa4"}}}
+        }
+    }
+}

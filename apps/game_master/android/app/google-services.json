@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "756742084141",
+    "project_id": "biblical-games",
+    "storage_bucket": "biblical-games.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:756742084141:android:d1c01faa0e2b7cd6ca4aa4",
+        "android_client_info": {
+          "package_name": "com.example.game_master"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvnWgC7MzdVjCR_2Ly8gEmmHNBaBsZ-ZM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

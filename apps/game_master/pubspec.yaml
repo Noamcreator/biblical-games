@@ -1,0 +1,29 @@
+name: game_master
+description: Application Game Master pour animer les jeux bibliques en réseau.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  core:
+    path: ../../packages/core
+  ui_components:
+    path: ../../packages/ui_components
+  firebase_core: ^4.7.0
+  firebase_storage: ^13.3.0
+  go_router: ^17.2.2
+  flutter_riverpod: ^3.3.1
+  image_picker: ^1.2.2
+  qr_flutter: ^4.1.0   # afficher le QR code de la salle
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
