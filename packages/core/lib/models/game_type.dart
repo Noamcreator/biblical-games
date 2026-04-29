@@ -17,7 +17,7 @@ enum GameType {
       case friseChronologique:
         return 'Frise Chronologique';
       case devineVerset:
-        return 'Divine ton Verset';
+        return 'Devine le Verset';
       case redactionBible:
         return 'Rédaction de la Bible';
     }

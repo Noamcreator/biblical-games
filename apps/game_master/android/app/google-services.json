@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:756742084141:android:d1c01faa0e2b7cd6ca4aa4",
+        "mobilesdk_app_id": "1:756742084141:android:907d6840f0f0391dca4aa4",
         "android_client_info": {
-          "package_name": "com.example.game_master"
+          "package_name": "org.noam.game_master"
         }
       },
       "oauth_client": [],

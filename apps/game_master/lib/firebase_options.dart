@@ -57,7 +57,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '756742084141',
     projectId: 'biblical-games',
     storageBucket: 'biblical-games.firebasestorage.app',
-    iosBundleId: 'com.example.gameMaster',
+    iosBundleId: 'org.noam.gameMaster',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -66,7 +66,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '756742084141',
     projectId: 'biblical-games',
     storageBucket: 'biblical-games.firebasestorage.app',
-    iosBundleId: 'com.example.gameMaster',
+    iosBundleId: 'org.noam.gameMaster',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(

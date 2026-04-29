@@ -30,81 +30,49 @@ class SessionService {
   String? get currentUid => _auth.currentUser?.uid;
 
   // ═══════════════════════════════════════════════════════════
-  // GESTION DE SESSION
+  // GESTION DE SESSION (commune)
   // ═══════════════════════════════════════════════════════════
 
   static String _generateCode() {
     const words = ['RUTH', 'ADAM', 'NOAH', 'ABEL', 'SARA',
                    'JOEL', 'AMOS', 'EZRA', 'LEVI', 'PAUL'];
     final word = words[DateTime.now().millisecond % words.length];
-    final num = (DateTime.now().second % 90) + 10;
+    final num  = (DateTime.now().second % 90) + 10;
     return '$word-$num';
-  }
-
-  static List<String> _chooseVisibleFields({int count = 4}) {
-    final candidates = [
-      'localisation',
-      'role',
-      'periodeHistorique',
-      'livreBible',
-      'symbole',
-      'evenementMarquant',
-      'qualite',
-      'defaut',
-    ];
-    final fields = List<String>.from(candidates)..shuffle();
-    return fields.take(count).toList();
   }
 
   Future<Session> createSession({
     required GameType gameType,
     required int totalQuestions,
+    int roundTimeSeconds = 60,
+    bool sameCardForAll = true,
   }) async {
-    final uid = await signInAnonymously();
-    final code = _generateCode();
-
-    Map<String, dynamic>? currentQuestionData;
-    var adjustedTotalQuestions = totalQuestions;
-
-    if (gameType == GameType.fichePerso) {
-      final config = await JsonLoader().loadFichePerso();
-      final availableIds = config.generatePioche();
-      if (adjustedTotalQuestions > availableIds.length) {
-        adjustedTotalQuestions = availableIds.length;
-      }
-      final selectedIds = availableIds.take(adjustedTotalQuestions).toList();
-      final personnages = <String, dynamic>{};
-      for (final personnage in config.personnages.where((p) => selectedIds.contains(p.id))) {
-        personnages[personnage.id] = personnage.toJson();
-      }
-      currentQuestionData = {
-        'personnages': personnages,
-        'piocheQueue': selectedIds,
-        'piocheUsed': <String>[],
-        'currentPersonnageId': null,
-        'fiche': null,
-        'champsVisibles': <String>[],
-        'cards': <String>[],
-        'roundState': 'idle',
-        'roundNumber': 0,
-        'roundWinnerId': null,
-        'roundWinnerName': null,
-      };
+    switch (gameType) {
+      case GameType.fichePerso:
+        return _createFichePersoSession(
+          totalQuestions:  totalQuestions,
+          roundTimeSeconds: roundTimeSeconds,
+          sameCardForAll:  sameCardForAll,
+        );
+      // Ajouter ici d'autres types de jeux
+      // case GameType.autreJeu:
+      //   return _createAutreJeuSession(...);
+      case GameType.map:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case GameType.vraiFaux:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case GameType.friseChronologique:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case GameType.devineVerset:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case GameType.redactionBible:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
-
-    final session = Session(
-      code: code,
-      masterUid: uid,
-      gameType: gameType,
-      state: SessionState.waiting,
-      currentQuestionIndex: 0,
-      totalQuestions: adjustedTotalQuestions,
-      players: const {},
-      createdAt: DateTime.now(),
-      currentQuestionData: currentQuestionData,
-    );
-    await _sessions.doc(code).set(session.toMap());
-    return session;
   }
 
   Future<Session> joinSession({
@@ -139,103 +107,228 @@ class SessionService {
     if (!doc.exists) throw Exception('Session introuvable : $code');
 
     final session = Session.fromMap(doc.data()!);
-    if (session.gameType == GameType.fichePerso) {
-      final qData = session.currentQuestionData;
-      final currentPersonnageId = qData?['currentPersonnageId'] as String?;
-      if (currentPersonnageId == null) {
-        await drawNextPersonnage(code);
-      } else {
-        await _sessions.doc(code).update({'state': SessionState.playing.name});
-      }
-      return;
+    switch (session.gameType) {
+      case GameType.fichePerso:
+        await _startFichePerso(code, session);
+        break;
+      // case GameType.autreJeu: await _startAutreJeu(code); break;
+      case GameType.map:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case GameType.vraiFaux:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case GameType.friseChronologique:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case GameType.devineVerset:
+        // TODO: Handle this case.
+        throw UnimplementedError();
+      case GameType.redactionBible:
+        // TODO: Handle this case.
+        throw UnimplementedError();
     }
-
-    await _sessions.doc(code).update({'state': SessionState.playing.name});
   }
 
   Future<List<Player>> getFinalScores(String code) async {
-    final doc = await _sessions.doc(code).get();
+    final doc     = await _sessions.doc(code).get();
     final session = Session.fromMap(doc.data()!);
     return session.players.values.toList()
       ..sort((a, b) => b.score.compareTo(a.score));
   }
 
-  Future<void> showReview(String code) async {
-    await _sessions.doc(code).update({'state': SessionState.reviewing.name});
-  }
-
   // ═══════════════════════════════════════════════════════════
-  // FICHE PERSO — GAME MASTER
+  // ── FICHE PERSO ────────────────────────────────────────────
   // ═══════════════════════════════════════════════════════════
 
-  /// Initialise la pioche (appelé par le GM après CreateSession)
-  Future<void> initFichePerso({
-    required String code,
-    required List<String> piocheIds,
+  // ── Création ─────────────────────────────────────────────
+
+  Future<Session> _createFichePersoSession({
+    required int totalQuestions,
+    required int roundTimeSeconds,
+    required bool sameCardForAll,
   }) async {
-    await _sessions.doc(code).update({
-      'currentQuestionData': {
-        'piocheQueue': piocheIds,
-        'piocheUsed': <String>[],
-        'currentPersonnageId': null,
-        'roundState': 'idle',
-        'roundNumber': 0,
-        'roundWinnerId': null,
-        'roundWinnerName': null,
-      },
-      'state': SessionState.playing.name,
-    });
+    final uid    = await signInAnonymously();
+    final code   = _generateCode();
+    final config = await JsonLoader().loadFichePerso();
+    final availableIds = config.generatePioche();
+
+    var adjustedTotal = totalQuestions;
+    if (sameCardForAll && adjustedTotal > availableIds.length) {
+      adjustedTotal = availableIds.length;
+    }
+
+    final selectedIds = sameCardForAll
+        ? availableIds.take(adjustedTotal).toList()
+        : availableIds;
+
+    // Stocker tous les personnages sérialisés dans la session
+    final personnages = <String, dynamic>{};
+    for (final p in config.personnages.where((p) => selectedIds.contains(p.id))) {
+      personnages[p.id] = p.toJson();
+    }
+
+    final currentQuestionData = <String, dynamic>{
+      'personnages':         personnages,
+      'piocheQueue':         selectedIds,
+      'piocheUsed':          <String>[],
+      'currentPersonnageId': null,
+      'fiche':               null,
+      'champsVisibles':      <String>[],
+      'cards':               <String>[],
+      'roundState':          'idle',
+      'roundNumber':         0,
+      'roundWinnerId':       null,
+      'roundWinnerName':     null,
+      'roundTimeSeconds':    roundTimeSeconds,
+      'reviewTimeSeconds':   config.reviewTimeSeconds,
+      'sameCardForAll':      sameCardForAll,
+      'playerQuestions':     null,
+    };
+
+    final session = Session(
+      code:                 code,
+      masterUid:            uid,
+      gameType:             GameType.fichePerso,
+      state:                SessionState.waiting,
+      currentQuestionIndex: 0,
+      totalQuestions:       adjustedTotal,
+      players:              const {},
+      createdAt:            DateTime.now(),
+      currentQuestionData:  currentQuestionData,
+    );
+
+    await _sessions.doc(code).set(session.toMap());
+    return session;
   }
 
-  /// GM tire le prochain personnage de la pioche
+  // ── Démarrage ────────────────────────────────────────────
+
+  Future<void> _startFichePerso(String code, Session session) async {
+    final qData               = session.currentQuestionData;
+    final currentPersonnageId = qData?['currentPersonnageId'] as String?;
+    if (currentPersonnageId == null) {
+      await drawNextPersonnage(code);
+    } else {
+      await _sessions.doc(code).update({'state': SessionState.playing.name});
+    }
+  }
+
+  // ── Tirage du prochain personnage (Game Master) ───────────
+
   Future<void> drawNextPersonnage(String code) async {
-    final doc = await _sessions.doc(code).get();
-    final data = doc.data()!;
+    final doc   = await _sessions.doc(code).get();
+    final data  = doc.data()!;
     final qData = Map<String, dynamic>.from(
         data['currentQuestionData'] as Map<String, dynamic>);
 
-    final queue = List<String>.from(qData['piocheQueue'] as List? ?? []);
-    final used = List<String>.from(qData['piocheUsed'] as List? ?? []);
+    final queue       = List<String>.from(qData['piocheQueue'] as List? ?? []);
+    final used        = List<String>.from(qData['piocheUsed']  as List? ?? []);
     final personnages = Map<String, dynamic>.from(
         qData['personnages'] as Map<String, dynamic>? ?? {});
+    final sameCardForAll   = qData['sameCardForAll']   as bool? ?? true;
+    final roundTimeSeconds = (qData['roundTimeSeconds'] as num?)?.toInt() ?? 60;
+    final reviewTimeSeconds = (qData['reviewTimeSeconds'] as num?)?.toInt() ?? 15;
 
     if (queue.isEmpty) {
       await _sessions.doc(code).update({'state': SessionState.finished.name});
       return;
     }
 
-    final next = queue.removeAt(0);
-    used.add(next);
-    final roundNum = ((qData['roundNumber'] as num?)?.toInt() ?? 0) + 1;
-
-    final currentQuestionIndex = (data['currentQuestionIndex'] as num?)?.toInt() ?? 0;
-    final firstDraw = qData['currentPersonnageId'] == null ||
+    final roundNum          = ((qData['roundNumber'] as num?)?.toInt() ?? 0) + 1;
+    final currentQIdx       = (data['currentQuestionIndex'] as num?)?.toInt() ?? 0;
+    final firstDraw         = qData['currentPersonnageId'] == null ||
         ((qData['roundNumber'] as num?)?.toInt() ?? 0) == 0;
-    final nextQuestionIndex = firstDraw ? currentQuestionIndex : currentQuestionIndex + 1;
+    final nextQuestionIndex = firstDraw ? currentQIdx : currentQIdx + 1;
 
-    // Charger le config du JSON pour obtenir duplicateFactor et reviewTime
-    final config = await JsonLoader().loadFichePerso();
+    final config          = await JsonLoader().loadFichePerso();
     final duplicateFactor = config.duplicateCardsPerField;
-    final reviewTimeSeconds = config.reviewTimeSeconds;
 
-    final ficheJson = Map<String, dynamic>.from(
-        personnages[next] as Map<String, dynamic>);
-    final fiche = FichePersoPersonnage.fromJson(ficheJson);
-    final visibleFields = _chooseVisibleFields();
-    final cards = fiche
-        .generateCards(duplicateFactor: duplicateFactor)
-        .where((card) => !visibleFields.contains(card.champ))
-        .map((card) => card.toJson())
-        .toList();
+    // Visibles : uniquement 'nom' (le joueur voit le nom, devine le reste)
+    const visibleFields = ['nom'];
 
-    // Réinitialiser les états joueurs pour ce round
-    final players = Map<String, dynamic>.from(
+    // Réinitialiser les états joueurs
+    final players       = Map<String, dynamic>.from(
         data['players'] as Map<String, dynamic>? ?? {});
     final playerUpdates = <String, dynamic>{};
     for (final uid in players.keys) {
-      playerUpdates['players.$uid.roundCompleted'] = false;
-      playerUpdates['players.$uid.roundCorrect'] = false;
+      playerUpdates['players.$uid.roundCompleted']   = false;
+      playerUpdates['players.$uid.roundCorrect']     = false;
       playerUpdates['players.$uid.roundCompletedAt'] = null;
+    }
+
+    Map<String, dynamic>? playerQuestions;
+    String?              currentPersonnageId;
+    Map<String, dynamic>? ficheJson;
+    List<Map<String, dynamic>>? cards;
+
+    if (!sameCardForAll && players.isNotEmpty) {
+      // ── Mode cartes différentes par joueur ────────────────
+      final playerIds = players.keys.toList();
+      final nextIds   = <String>[];
+
+      while (nextIds.length < playerIds.length) {
+        if (queue.isEmpty) {
+          if (used.isEmpty) break;
+          queue.addAll(used..shuffle());
+          used.clear();
+        }
+        nextIds.add(queue.removeAt(0));
+        used.add(nextIds.last);
+      }
+
+      final allIds = personnages.keys.toList();
+      while (nextIds.length < playerIds.length) {
+        nextIds.add(allIds[nextIds.length % allIds.length]);
+      }
+
+      playerQuestions = <String, dynamic>{};
+      for (var i = 0; i < playerIds.length; i++) {
+        final playerId     = playerIds[i];
+        final personnageId = nextIds[i];
+        final fiche        = FichePersoPersonnage.fromJson(
+            Map<String, dynamic>.from(
+                personnages[personnageId] as Map<String, dynamic>));
+        final questionCards = fiche
+            .generateCards(duplicateFactor: duplicateFactor)
+            .where((card) => !visibleFields.contains(card.champ))
+            .map((card) => card.toJson())
+            .toList();
+
+        playerQuestions[playerId] = {
+          'fiche':          Map<String, dynamic>.from(
+              personnages[personnageId] as Map<String, dynamic>),
+          'champsVisibles': visibleFields,
+          'cards':          questionCards,
+          'pointsMax':      100,
+        };
+      }
+      currentPersonnageId = nextIds.first;
+
+    } else {
+      // ── Mode même carte pour tous ─────────────────────────
+      final next = queue.removeAt(0);
+      used.add(next);
+      currentPersonnageId = next;
+      ficheJson = Map<String, dynamic>.from(
+          personnages[next] as Map<String, dynamic>);
+
+      final fiche = FichePersoPersonnage.fromJson(ficheJson);
+      cards = fiche
+          .generateCards(duplicateFactor: duplicateFactor)
+          .where((card) => !visibleFields.contains(card.champ))
+          .map((card) => card.toJson())
+          .toList();
+
+      playerQuestions = <String, dynamic>{};
+      for (final playerId in players.keys) {
+        playerQuestions[playerId] = {
+          'fiche':          ficheJson,
+          'champsVisibles': visibleFields,
+          'cards':          cards,
+          'pointsMax':      100,
+        };
+      }
     }
 
     await _sessions.doc(code).update({
@@ -243,40 +336,43 @@ class SessionService {
       'currentQuestionIndex': nextQuestionIndex,
       'state': SessionState.playing.name,
       'currentQuestionData': {
-        'personnages':        personnages,
-        'piocheQueue':        queue,
-        'piocheUsed':         used,
-        'currentPersonnageId': next,
-        'fiche':               ficheJson,
-        'champsVisibles':      visibleFields,
-        'cards':               cards,
-        'roundState':         'playing',
-        'roundNumber':        roundNum,
-        'roundWinnerId':      null,
-        'roundWinnerName':    null,
-        'reviewTimeSeconds':  reviewTimeSeconds,
-        'roundStartedAt':     DateTime.now().toIso8601String(),
+        'personnages':          personnages,
+        'piocheQueue':          queue,
+        'piocheUsed':           used,
+        'currentPersonnageId':  currentPersonnageId,
+        'fiche':                ficheJson,
+        'champsVisibles':       visibleFields,
+        'cards':                cards,
+        'playerQuestions':      playerQuestions,
+        'sameCardForAll':       sameCardForAll,
+        'roundTimeSeconds':     roundTimeSeconds,
+        'reviewTimeSeconds':    reviewTimeSeconds,
+        'roundState':           'playing',
+        'roundNumber':          roundNum,
+        'roundWinnerId':        null,
+        'roundWinnerName':      null,
+        'roundStartedAt':       DateTime.now().toIso8601String(),
       },
     });
   }
 
-  /// GM clôture le round → affiche les réponses à tous
+  /// GM clôture le round
   Future<void> endRound(String code) async {
     await _sessions.doc(code).update({
       'currentQuestionData.roundState': 'roundEnd',
     });
   }
 
-  // ═══════════════════════════════════════════════════════════
-  // FICHE PERSO — JOUEUR
-  // ═══════════════════════════════════════════════════════════
+  // ── Soumission joueur (Fiche Perso) ──────────────────────
 
-  /// Soumet la plaquette complétée (appelé quand le joueur valide)
+  /// [points] est calculé côté client (proportionnel + bonus temps).
+  /// Si [isCorrect] + premier à finir → bonus supplémentaire géré ici.
   Future<void> submitFicheBoard({
     required String code,
     required String playerId,
     required Map<String, String> placements,
     required bool isCorrect,
+    int points = 0,
   }) async {
     final now = DateTime.now().toIso8601String();
 
@@ -287,42 +383,58 @@ class SessionService {
         .collection('boards')
         .doc(playerId)
         .set({
-      'placements': placements,
-      'isCorrect':  isCorrect,
+      'placements':  placements,
+      'isCorrect':   isCorrect,
+      'points':      points,
       'submittedAt': now,
     }, SetOptions(merge: false));
 
-    // 2. Mise à jour du player dans la session
+    // 2. Mise à jour du joueur
     final updates = <String, dynamic>{
-      'players.$playerId.roundCompleted':  true,
-      'players.$playerId.roundCorrect':    isCorrect,
+      'players.$playerId.roundCompleted':   true,
+      'players.$playerId.roundCorrect':     isCorrect,
       'players.$playerId.roundCompletedAt': now,
     };
 
+    // Bonus "premier à avoir tout bon"
     if (isCorrect) {
-      // Vérifie si c'est le premier à avoir bon
-      final doc = await _sessions.doc(code).get();
-      final qData = doc.data()?['currentQuestionData'] as Map<String, dynamic>?;
+      final doc        = await _sessions.doc(code).get();
+      final qData      = doc.data()?['currentQuestionData'] as Map<String, dynamic>?;
       final alreadyWon = qData?['roundWinnerId'] != null;
 
       if (!alreadyWon) {
-        // 🥇 Premier → +100 pts
-        updates['players.$playerId.score'] = FieldValue.increment(100);
-        updates['currentQuestionData.roundWinnerId'] = playerId;
+        // 🥇 Premier tout correct → +50 pts bonus
+        updates['players.$playerId.score']            = FieldValue.increment(points + 50);
+        updates['currentQuestionData.roundWinnerId']  = playerId;
         final playerData =
             (doc.data()?['players'] as Map<String, dynamic>?)?[playerId];
         updates['currentQuestionData.roundWinnerName'] =
             (playerData?['name'] as String?) ?? 'Joueur';
       } else {
-        // Correct mais pas premier → +30 pts
-        updates['players.$playerId.score'] = FieldValue.increment(30);
+        updates['players.$playerId.score'] = FieldValue.increment(points);
+      }
+    } else {
+      // Pas tout correct mais des bonnes réponses → points proportionnels
+      if (points > 0) {
+        updates['players.$playerId.score'] = FieldValue.increment(points);
       }
     }
 
     await _sessions.doc(code).update(updates);
   }
 
-  /// Soumet une réponse de jeu générique (tous les jeux côté joueur)
+  // ═══════════════════════════════════════════════════════════
+  // ── AUTRE JEU (exemple de structure séparée) ───────────────
+  // ═══════════════════════════════════════════════════════════
+  //
+  // Future<Session> _createAutreJeuSession({...}) async { ... }
+  // Future<void> _startAutreJeu(String code) async { ... }
+  // Future<void> submitAutreJeuAnswer({...}) async { ... }
+
+  // ═══════════════════════════════════════════════════════════
+  // RÉPONSE GÉNÉRIQUE (tous jeux)
+  // ═══════════════════════════════════════════════════════════
+
   Future<void> submitAnswer({
     required String sessionCode,
     required String playerId,
@@ -340,9 +452,9 @@ class SessionService {
         .doc(sessionCode)
         .collection('answers')
         .add({
-      'playerId': playerId,
-      'answer': answer,
-      'points': points,
+      'playerId':    playerId,
+      'answer':      answer,
+      'points':      points,
       'submittedAt': now,
     });
 
@@ -353,12 +465,19 @@ class SessionService {
     }
   }
 
-  /// Stream des boards (Game Master peut voir les soumissions en temps réel)
+  // ═══════════════════════════════════════════════════════════
+  // STREAMS UTILITAIRES
+  // ═══════════════════════════════════════════════════════════
+
   Stream<QuerySnapshot<Map<String, dynamic>>> watchBoards(String code) {
     return _db
         .collection('sessions')
         .doc(code)
         .collection('boards')
         .snapshots();
+  }
+
+  Future<void> showReview(String code) async {
+    await _sessions.doc(code).update({'state': SessionState.reviewing.name});
   }
 }

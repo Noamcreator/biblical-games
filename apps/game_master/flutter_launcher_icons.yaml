@@ -1,0 +1,40 @@
+# flutter pub run flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: "../../packages/core/assets/icons/icon.png"
+
+  android: "ic_launcher"
+  min_sdk_android: 21 
+  
+  # 1. Couleur de fond (le bleu de ton logo original)
+  adaptive_icon_background: "#122E5D" 
+  
+  # 2. Ton logo (le texte JW LIFE) en SVG avec fond transparent
+  adaptive_icon_foreground: "../../packages/core/assets/icons/icon_foreground_black.png" 
+  
+  # 3. L'ajustement pour que le logo ne touche pas les bords
+  adaptive_icon_foreground_inset: 16 
+
+  # 4. LA LIGNE MAGIQUE pour Xiaomi (Thème dynamique)
+  # On réutilise le même SVG transparent, Android s'occupe de le colorer
+  adaptive_icon_monochrome: "../../packages/core/assets/icons/icon_foreground_black.png"
+
+  ios: true
+  remove_alpha_ios: true
+  
+  # Optionnel : Pour iOS 18+ qui supporte aussi les icônes teintées
+  image_path_ios_tinted_grayscale: "../../packages/core/assets/icons/icon_foreground_black.png"
+
+  web:
+    generate: true
+    image_path: "../../packages/core/assets/icons/icon.png"
+    background_color: "#hexcode"
+    theme_color: "#hexcode"
+
+  windows:
+    generate: true
+    image_path: "../../packages/core/assets/icons/icon.png"
+    icon_size: 48 # min:48, max:256, default: 48
+
+  macos:
+    generate: true
+    image_path: "../../packages/core/assets/icons/icon.png"
