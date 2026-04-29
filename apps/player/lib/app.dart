@@ -5,10 +5,7 @@ import 'screens/lobby_screen.dart';
 import 'screens/results_screen.dart';
 import 'screens/games/fiche_perso_screen.dart';
 import 'screens/games/vrai_faux_screen.dart';
-import 'screens/games/frise_screen.dart';
-import 'screens/games/devine_verset_screen.dart';
 import 'screens/games/map_screen.dart';
-import 'screens/games/redaction_screen.dart';
 
 final _router = GoRouter(
   initialLocation: '/',
@@ -41,22 +38,19 @@ final _router = GoRouter(
     GoRoute(
       path: '/game/frise/:code',
       builder: (context, state) =>
-          FriseScreen(sessionCode: state.pathParameters['code']!),
+          const SizedBox.shrink(),
+          //FriseScreen(sessionCode: state.pathParameters['code']!),
     ),
     GoRoute(
       path: '/game/devine-verset/:code',
       builder: (context, state) =>
-          DevineVersetScreen(sessionCode: state.pathParameters['code']!),
+          const SizedBox.shrink(),
+          //DevineVersetScreen(sessionCode: state.pathParameters['code']!),
     ),
     GoRoute(
       path: '/game/map/:code',
       builder: (context, state) =>
           MapScreen(sessionCode: state.pathParameters['code']!),
-    ),
-    GoRoute(
-      path: '/game/redaction/:code',
-      builder: (context, state) =>
-          RedactionScreen(sessionCode: state.pathParameters['code']!),
     ),
     GoRoute(
       path: '/results/:code',

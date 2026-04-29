@@ -1,21 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/games/fiche_perso.dart';
+import '../models/games/vrai_ou_faux.dart';
+import '../models/games/devine_verset.dart';
 import '../models/session.dart';
 import '../models/player.dart';
 import '../models/game_type.dart';
 import '../services/json_loader.dart';
+import '../services/games/vrai_faux_service.dart';
+import '../services/games/carte_biblique_service.dart';
 
 class SessionService {
-  final FirebaseFirestore _db;
+  final FirebaseFirestore db;
   final FirebaseAuth _auth;
 
   SessionService({FirebaseFirestore? db, FirebaseAuth? auth})
-      : _db = db ?? FirebaseFirestore.instance,
+      : db = db ?? FirebaseFirestore.instance,
         _auth = auth ?? FirebaseAuth.instance;
 
   CollectionReference<Map<String, dynamic>> get _sessions =>
-      _db.collection('sessions');
+      db.collection('sessions');
 
   // ═══════════════════════════════════════════════════════════
   // AUTH
@@ -41,6 +45,9 @@ class SessionService {
     return '$word-$num';
   }
 
+  late final VraiFauxService _vraiFauxHelper = VraiFauxService(db: db);
+  late final CarteBibliqueService _carteBibliqueHelper = CarteBibliqueService(db: db);
+
   Future<Session> createSession({
     required GameType gameType,
     required int totalQuestions,
@@ -54,23 +61,21 @@ class SessionService {
           roundTimeSeconds: roundTimeSeconds,
           sameCardForAll:  sameCardForAll,
         );
-      // Ajouter ici d'autres types de jeux
-      // case GameType.autreJeu:
-      //   return _createAutreJeuSession(...);
       case GameType.map:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return _carteBibliqueHelper.createSession(
+          totalQuestions: totalQuestions,
+          roundTimeSeconds: roundTimeSeconds,
+        );
       case GameType.vraiFaux:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        return _vraiFauxHelper.createSession(
+          totalQuestions: totalQuestions,
+          roundTimeSeconds: roundTimeSeconds,
+        );
       case GameType.friseChronologique:
-        // TODO: Handle this case.
         throw UnimplementedError();
       case GameType.devineVerset:
-        // TODO: Handle this case.
         throw UnimplementedError();
       case GameType.redactionBible:
-        // TODO: Handle this case.
         throw UnimplementedError();
     }
   }
@@ -111,21 +116,40 @@ class SessionService {
       case GameType.fichePerso:
         await _startFichePerso(code, session);
         break;
-      // case GameType.autreJeu: await _startAutreJeu(code); break;
       case GameType.map:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        await _carteBibliqueHelper.startGame(code, session);
+        break;
       case GameType.vraiFaux:
-        // TODO: Handle this case.
-        throw UnimplementedError();
+        await _vraiFauxHelper.startGame(code, session);
+        break;
       case GameType.friseChronologique:
-        // TODO: Handle this case.
         throw UnimplementedError();
       case GameType.devineVerset:
-        // TODO: Handle this case.
         throw UnimplementedError();
       case GameType.redactionBible:
-        // TODO: Handle this case.
+        throw UnimplementedError();
+    }
+  }
+
+  Future<void> drawNextQuestion(String code) async {
+    final doc = await _sessions.doc(code).get();
+    if (!doc.exists) throw Exception('Session introuvable : $code');
+    final session = Session.fromMap(doc.data()!);
+    switch (session.gameType) {
+      case GameType.fichePerso:
+        await drawNextPersonnage(code);
+        break;
+      case GameType.map:
+        await _carteBibliqueHelper.drawNextQuestion(code);
+        break;
+      case GameType.vraiFaux:
+        await _vraiFauxHelper.drawNextQuestion(code);
+        break;
+      case GameType.friseChronologique:
+        throw UnimplementedError();
+      case GameType.devineVerset:
+        throw UnimplementedError();
+      case GameType.redactionBible:
         throw UnimplementedError();
     }
   }
@@ -244,8 +268,8 @@ class SessionService {
     final config          = await JsonLoader().loadFichePerso();
     final duplicateFactor = config.duplicateCardsPerField;
 
-    // Visibles : uniquement 'nom' (le joueur voit le nom, devine le reste)
-    const visibleFields = ['nom'];
+    // Visibles : nom et localisation sont affichés pour orienter le joueur
+    const visibleFields = ['nom', 'localisation'];
 
     // Réinitialiser les états joueurs
     final players       = Map<String, dynamic>.from(
@@ -363,6 +387,13 @@ class SessionService {
     });
   }
 
+  /// GM passe en mode correction
+  Future<void> showReview(String code) async {
+    await _sessions.doc(code).update({
+      'state': SessionState.reviewing.name,
+    });
+  }
+
   // ── Soumission joueur (Fiche Perso) ──────────────────────
 
   /// [points] est calculé côté client (proportionnel + bonus temps).
@@ -377,7 +408,7 @@ class SessionService {
     final now = DateTime.now().toIso8601String();
 
     // 1. Enregistre dans la sous-collection boards
-    await _db
+    await db
         .collection('sessions')
         .doc(code)
         .collection('boards')
@@ -421,6 +452,32 @@ class SessionService {
     }
 
     await _sessions.doc(code).update(updates);
+    await _endRoundIfAllCompleted(code);
+  }
+
+  Future<void> _endRoundIfAllCompleted(String code) async {
+    final doc = await _sessions.doc(code).get();
+    final data = doc.data();
+    if (data == null) return;
+
+    final session = Session.fromMap(data);
+
+    if (session.state == SessionState.reviewing ||
+        session.state == SessionState.finished) {
+      return;
+    }
+
+    final players = session.players;
+    if (players.isEmpty) return;
+
+    final allDone = players.values.every((p) => p.roundCompleted);
+    if (!allDone) return;
+
+    await _sessions.doc(code).update({
+      'state': SessionState.reviewing.name,
+      'currentQuestionData.roundState': 'roundEnd',
+      'currentQuestionData.reviewStartedAt': DateTime.now().toIso8601String(),
+    });
   }
 
   // ═══════════════════════════════════════════════════════════
@@ -438,7 +495,7 @@ class SessionService {
   Future<void> submitAnswer({
     required String sessionCode,
     required String playerId,
-    required Object answer,
+    required dynamic answer,
     required int points,
   }) async {
     if (playerId.isEmpty) {
@@ -447,22 +504,64 @@ class SessionService {
 
     final now = DateTime.now().toIso8601String();
 
-    await _db
+    await db
         .collection('sessions')
         .doc(sessionCode)
         .collection('answers')
         .add({
-      'playerId':    playerId,
-      'answer':      answer,
-      'points':      points,
+      'playerId': playerId,
+      'answer': answer,
+      'points': points,
       'submittedAt': now,
     });
 
+    final updates = <String, dynamic>{
+      'players.$playerId.roundCompleted': true,
+      'players.$playerId.roundCompletedAt': now,
+    };
+
     if (points != 0) {
-      await _sessions.doc(sessionCode).update({
-        'players.$playerId.score': FieldValue.increment(points),
-      });
+      updates['players.$playerId.score'] = FieldValue.increment(points);
     }
+
+    await _sessions.doc(sessionCode).update(updates);
+
+    // Vérifie automatiquement si tout le monde a terminé
+    await _endRoundIfAllCompleted(sessionCode);
+  }
+
+  Future<void> forceEndRound(String code) async {
+    final doc = await _sessions.doc(code).get();
+    if (!doc.exists) return;
+
+    final session = Session.fromMap(doc.data()!);
+
+    if (session.state == SessionState.reviewing ||
+        session.state == SessionState.finished) {
+      return;
+    }
+
+    await _sessions.doc(code).update({
+      'state': SessionState.reviewing.name,
+      'currentQuestionData.roundState': 'roundEnd',
+      'currentQuestionData.reviewStartedAt': DateTime.now().toIso8601String(),
+    });
+  }
+
+  Future<void> autoAdvanceAfterReview(String code) async {
+    final doc = await _sessions.doc(code).get();
+    if (!doc.exists) return;
+
+    final session = Session.fromMap(doc.data()!);
+
+    if (session.state == SessionState.finished) return;
+
+    if (session.currentQuestionIndex >= session.totalQuestions) {
+      await endGame(code);
+      return;
+    }
+
+    await drawNextQuestion(code);
   }
 
   // ═══════════════════════════════════════════════════════════
@@ -470,14 +569,10 @@ class SessionService {
   // ═══════════════════════════════════════════════════════════
 
   Stream<QuerySnapshot<Map<String, dynamic>>> watchBoards(String code) {
-    return _db
+    return db
         .collection('sessions')
         .doc(code)
         .collection('boards')
         .snapshots();
-  }
-
-  Future<void> showReview(String code) async {
-    await _sessions.doc(code).update({'state': SessionState.reviewing.name});
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:game_master/core/theme_manager.dart';
@@ -5,12 +6,25 @@ import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:core/core.dart';
 
-class ControlScreen extends StatelessWidget {
+class ControlScreen extends StatefulWidget {
   final String sessionCode;
   const ControlScreen({super.key, required this.sessionCode});
 
   static const String baseUrl = 'https://noamcreator.github.io/biblical-games';
   String get joinUrl => '$baseUrl/#/join/$sessionCode';
+
+  @override
+  State<ControlScreen> createState() => _ControlScreenState();
+}
+
+class _ControlScreenState extends State<ControlScreen> {
+  Timer? _timer;
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +39,7 @@ class ControlScreen extends StatelessWidget {
         final cardColor = isDark ? const Color(0xFF1E293B) : Colors.white;
 
         return StreamBuilder<Session>(
-          stream: service.watchSession(sessionCode),
+          stream: service.watchSession(widget.sessionCode),
           builder: (context, snap) {
             if (!snap.hasData) {
               return Scaffold(
@@ -35,13 +49,36 @@ class ControlScreen extends StatelessWidget {
             }
             final session = snap.data!;
 
+            // Timer pour auto-end round
+            _timer?.cancel();
+            if (session.roundIsPlaying && session.roundRemainingSeconds == 0) {
+              service.endRound(widget.sessionCode);
+            } else if (session.roundIsEnded && session.isPlaying) {
+              // Attendre 2 secondes puis passer en review
+              _timer = Timer(const Duration(seconds: 2), () {
+                if (mounted) service.showReview(widget.sessionCode);
+              });
+            } else if (session.isReviewing) {
+              // Attendre reviewTimeSeconds puis passer à la question suivante
+              _timer = Timer(Duration(seconds: session.reviewTimeSeconds), () {
+                if (mounted) {
+                  final isLast = session.currentQuestionIndex >= session.totalQuestions - 1;
+                  if (!isLast) {
+                    service.drawNextPersonnage(widget.sessionCode);
+                  } else {
+                    service.endGame(widget.sessionCode);
+                  }
+                }
+              });
+            }
+
             return Scaffold(
               backgroundColor: isDark ? const Color(0xFF0F172A) : Colors.grey[50],
               appBar: AppBar(
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 title: Text(
-                  '${session.gameType.emoji} Salle : $sessionCode',
+                  '${session.gameType.emoji} Salle : ${widget.sessionCode}',
                   style: TextStyle(color: textColor, fontWeight: FontWeight.bold),
                 ),
                 actions: [
@@ -82,7 +119,7 @@ class ControlScreen extends StatelessWidget {
                                   const SizedBox(height: 12),
                                   // QR Code s'adapte au thème pour être lisible
                                   QrImageView(
-                                    data: joinUrl,
+                                    data: widget.joinUrl,
                                     size: 160,
                                     eyeStyle: QrEyeStyle(
                                       eyeShape: QrEyeShape.square,
@@ -143,6 +180,26 @@ class ControlScreen extends StatelessWidget {
                             'Question ${session.currentQuestionIndex + 1} sur ${session.totalQuestions}',
                             style: TextStyle(color: textColor.withOpacity(0.6)),
                           ),
+                          if (session.roundIsPlaying && session.roundStartedAt != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Text(
+                                'Temps restant : ${session.roundRemainingSeconds}s',
+                                style: TextStyle(
+                                  color: session.roundRemainingSeconds <= 10 ? Colors.red : accentColor,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ),
+                          if (session.roundIsEnded)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Text(
+                                'Fin de manche : ${session.completedPlayersCount}/${session.players.length} joueurs ont fini',
+                                style: TextStyle(color: Colors.orange.shade700, fontWeight: FontWeight.bold),
+                              ),
+                            ),
 
                           const Spacer(),
 
@@ -167,7 +224,7 @@ class ControlScreen extends StatelessWidget {
   Widget _buildCodeChip(BuildContext context, bool isDark, Color accentColor) {
     return InkWell(
       onTap: () {
-        Clipboard.setData(ClipboardData(text: sessionCode));
+        Clipboard.setData(ClipboardData(text: widget.sessionCode));
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Code copié dans le presse-papier !'), behavior: SnackBarBehavior.floating),
         );
@@ -183,7 +240,7 @@ class ControlScreen extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              sessionCode,
+              widget.sessionCode,
               style: TextStyle(color: accentColor, fontSize: 20, fontWeight: FontWeight.w900, letterSpacing: 3),
             ),
             const SizedBox(width: 8),
@@ -242,7 +299,7 @@ class ControlScreen extends StatelessWidget {
         label: 'LANCER LA PARTIE',
         icon: Icons.play_arrow_rounded,
         color: Colors.green,
-        onTap: () => service.startGame(sessionCode),
+        onTap: () => service.startGame(widget.sessionCode),
       );
     }
 
@@ -251,7 +308,7 @@ class ControlScreen extends StatelessWidget {
         label: 'PASSER EN CORRECTION',
         icon: Icons.fact_check_rounded,
         color: Colors.orange,
-        onTap: () => service.showReview(sessionCode),
+        onTap: () => service.showReview(widget.sessionCode),
       );
     }
 
@@ -263,9 +320,9 @@ class ControlScreen extends StatelessWidget {
         color: accentColor,
         onTap: () async {
           if (!isLast) {
-            await service.drawNextPersonnage(sessionCode);
+            await service.drawNextQuestion(widget.sessionCode);
           } else {
-            await service.endGame(sessionCode);
+            await service.endGame(widget.sessionCode);
           }
         },
       );
@@ -290,7 +347,7 @@ class ControlScreen extends StatelessWidget {
       ),
     );
     if (confirm == true) {
-      await service.endGame(sessionCode);
+      await service.endGame(widget.sessionCode);
       if (context.mounted) context.go('/');
     }
   }

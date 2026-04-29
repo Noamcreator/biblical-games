@@ -136,12 +136,11 @@ class LieuBiblique extends Equatable {
   ];
   
   @override
-  // TODO: implement props
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [id, nom, latitude, longitude, description];
 }
 
 /// Question : pointer un lieu sur la carte
-class MapQuestion extends Equatable {
+class VerseMapQuestion extends Equatable {
   final String id;
   final LieuBiblique lieu;
   final String question; // ex: "Où Jésus a-t-il été baptisé ?"
@@ -149,7 +148,7 @@ class MapQuestion extends Equatable {
   final int dureeSecondes;
   final double rayonToleranceKm; // distance max pour avoir les points
 
-  const MapQuestion({
+  const VerseMapQuestion({
     required this.id,
     required this.lieu,
     required this.question,
@@ -167,14 +166,37 @@ class MapQuestion extends Equatable {
     'rayonToleranceKm': rayonToleranceKm,
   };
 
-  factory MapQuestion.fromMap(Map<String, dynamic> map) => MapQuestion(
-    id: map['id'] as String,
-    lieu: LieuBiblique.fromMap(map['lieu'] as Map<String, dynamic>),
-    question: map['question'] as String,
-    pointsMax: (map['pointsMax'] as num).toInt(),
-    dureeSecondes: (map['dureeSecondes'] as num).toInt(),
-    rayonToleranceKm: (map['rayonToleranceKm'] as num).toDouble(),
-  );
+  factory VerseMapQuestion.fromMap(Map<String, dynamic> map) {
+    if (map['lieu'] is Map) {
+      return VerseMapQuestion(
+        id: (map['id'] ?? '').toString(),
+        lieu: LieuBiblique.fromMap(map['lieu'] as Map<String, dynamic>),
+        question: map['question'] as String,
+        pointsMax: (map['pointsMax'] as num?)?.toInt() ?? 150,
+        dureeSecondes: (map['dureeSecondes'] as num?)?.toInt() ?? 45,
+        rayonToleranceKm: (map['rayonToleranceKm'] as num?)?.toDouble() ?? 50,
+      );
+    }
+
+    final lieu = LieuBiblique(
+      id: (map['id'] ?? '').toString(),
+      nom: map['lieu_correct'] as String? ?? 'Lieu inconnu',
+      latitude: (map['lat'] as num).toDouble(),
+      longitude: (map['lng'] as num).toDouble(),
+      description: map['evenement'] as String? ?? 'Lieu biblique',
+      evenement: map['evenement'] as String?,
+      reference: null,
+    );
+
+    return VerseMapQuestion(
+      id: (map['id'] ?? '').toString(),
+      lieu: lieu,
+      question: map['evenement'] as String? ?? 'Où était cet événement ?',
+      pointsMax: (map['pointsMax'] as num?)?.toInt() ?? 150,
+      dureeSecondes: (map['dureeSecondes'] as num?)?.toInt() ?? 45,
+      rayonToleranceKm: (map['rayonToleranceKm'] as num?)?.toDouble() ?? 50,
+    );
+  }
 
   @override
   List<Object?> get props => [id, lieu];

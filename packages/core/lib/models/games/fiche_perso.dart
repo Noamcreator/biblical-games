@@ -11,7 +11,6 @@ class FichePersoLibrary {
   final List<String> historicalPeriods;
   final List<String> books;
   final List<String> symbols;
-  final List<String> difficultyLevels;
 
   const FichePersoLibrary({
     required this.names,
@@ -20,7 +19,6 @@ class FichePersoLibrary {
     required this.historicalPeriods,
     required this.books,
     required this.symbols,
-    required this.difficultyLevels,
   });
 
   factory FichePersoLibrary.fromJson(Map<String, dynamic> json) {
@@ -31,7 +29,6 @@ class FichePersoLibrary {
       historicalPeriods:List<String>.from(json['historical_periods'] as List),
       books:            List<String>.from(json['books']              as List),
       symbols:          List<String>.from(json['symbols']            as List),
-      difficultyLevels: List<String>.from(json['difficulty_levels']  as List),
     );
   }
 
@@ -42,7 +39,6 @@ class FichePersoLibrary {
   String resolvePeriod(int i)     => historicalPeriods[i];
   String resolveBook(int i)       => books[i];
   String resolveSymbol(int i)     => symbols[i];
-  String resolveDifficulty(int i) => difficultyLevels[i];
 
   // ── Résolutions multiples (jointure) ─────────────────────
   String joinNames(List<int> indices) =>
@@ -113,6 +109,7 @@ class FichePersoPersonnage extends Equatable {
   factory FichePersoPersonnage.fromIndexed(
     Map<String, dynamic> json,
     FichePersoLibrary lib,
+    List<String> difficultyLevels,
   ) {
     final nameIndices     = List<int>.from(json['name_indices']     as List);
     final locationIndices = List<int>.from(json['location_indices'] as List);
@@ -133,7 +130,7 @@ class FichePersoPersonnage extends Equatable {
       livreBible:        lib.joinBooks(bookIndices),
       symbole:           lib.joinSymbols(symbolIndices),
       evenementMarquant: json['key_event']      as String,
-      difficulte:        lib.resolveDifficulty(json['difficulty_index'] as int),
+      difficulte:        difficultyLevels[json['difficulty_index'] as int],
     );
   }
 
@@ -291,6 +288,7 @@ class ValidationResult {
 class FichePersoGameConfig {
   final String langue;
   final String version;
+  final List<String> difficultyLevels;
   final int duplicateCardsPerField;
   final int reviewTimeSeconds;
   final List<FichePersoPersonnage> personnages;
@@ -298,6 +296,7 @@ class FichePersoGameConfig {
   const FichePersoGameConfig({
     required this.langue,
     required this.version,
+    required this.difficultyLevels,
     required this.duplicateCardsPerField,
     required this.reviewTimeSeconds,
     required this.personnages,
@@ -305,17 +304,23 @@ class FichePersoGameConfig {
 
   factory FichePersoGameConfig.fromJson(Map<String, dynamic> json) {
     final meta = json['meta'] as Map<String, dynamic>;
-    final lib  = FichePersoLibrary.fromJson(
+    final lib = FichePersoLibrary.fromJson(
         json['library'] as Map<String, dynamic>);
 
+    final difficultyLevels = List<String>.from(meta['difficulty_levels'] as List);
+
     return FichePersoGameConfig(
-      langue:                meta['language']              as String,
-      version:               meta['version']               as String,
-      duplicateCardsPerField:(meta['duplicateCardsPerField'] as num?)?.toInt() ?? 1,
-      reviewTimeSeconds:     (meta['reviewTimeSeconds']      as num?)?.toInt() ?? 45,
+      langue: meta['language'] as String,
+      version: meta['version'] as String,
+      difficultyLevels: difficultyLevels,
+      duplicateCardsPerField: (meta['duplicateCardsPerField'] as num?)?.toInt() ?? 1,
+      reviewTimeSeconds: (meta['reviewTimeSeconds'] as num?)?.toInt() ?? 45,
       personnages: (json['characters'] as List)
           .map((c) => FichePersoPersonnage.fromIndexed(
-              c as Map<String, dynamic>, lib))
+                c as Map<String, dynamic>,
+                lib,
+                difficultyLevels,
+              ))
           .toList(),
     );
   }

@@ -1,0 +1,411 @@
+{
+    "meta": {
+      "jeu": "carte_biblique",
+      "language": "FR",
+      "version": "1.1",
+      "description": "Jeu de localisation avec coordonnées GPS pour calcul de distance.",
+      "difficulty_levels": ["Facile", "Moyenne", "Difficile"]
+    },
+    "questions": [
+      {
+        "id": 1,
+        "evenement": "Où Moïse a-t-il sauvé les Israélites en ouvrant les eaux ?",
+        "lieu_correct": "Mer Rouge (Golfe de Suez)",
+        "lat": 29.0000,
+        "lng": 33.0000,
+        "difficulte": "Facile"
+      },
+      {
+        "id": 2,
+        "evenement": "Où Jésus est-il né ?",
+        "lieu_correct": "Bethléem",
+        "lat": 31.7049,
+        "lng": 35.2038,
+        "difficulte": "Facile"
+      },
+      {
+        "id": 3,
+        "evenement": "Où Abraham a-t-il failli sacrifier son fils Isaac ?",
+        "lieu_correct": "Mont Moria",
+        "lat": 31.7781,
+        "lng": 35.2353,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 4,
+        "evenement": "Où les murs se sont-ils effondrés après que les Israélites ont sonné du cor ?",
+        "lieu_correct": "Jéricho",
+        "lat": 31.8700,
+        "lng": 35.4419,
+        "difficulte": "Facile"
+      },
+      {
+        "id": 5,
+        "evenement": "Où Moïse a-t-il reçu les Dix Commandements ?",
+        "lieu_correct": "Mont Sinaï",
+        "lat": 28.5394,
+        "lng": 33.9750,
+        "difficulte": "Facile"
+      },
+      {
+        "id": 6,
+        "evenement": "Où l'arche de Noé s'est-elle posée après le Déluge ?",
+        "lieu_correct": "Monts Ararat",
+        "lat": 39.7025,
+        "lng": 44.2992,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 7,
+        "evenement": "Où Jésus a-t-il été baptisé par Jean le Baptiste ?",
+        "lieu_correct": "Qasr al-Yahud (Jourdain)",
+        "lat": 31.8375,
+        "lng": 35.5453,
+        "difficulte": "Facile"
+      },
+      {
+        "id": 8,
+        "evenement": "Où les disciples ont-ils reçu l'esprit saint lors de la Pentecôte ?",
+        "lieu_correct": "Jérusalem",
+        "lat": 31.7719,
+        "lng": 35.2311,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 9,
+        "evenement": "Où Paul a-t-il vu une lumière aveuglante et entendu la voix de Jésus ?",
+        "lieu_correct": "Damas",
+        "lat": 33.5138,
+        "lng": 36.2964,
+        "difficulte": "Facile"
+      },
+      {
+        "id": 10,
+        "evenement": "Où Jonas devait-il aller avant de s'enfuir à Tarsis ?",
+        "lieu_correct": "Ninive",
+        "lat": 36.3633,
+        "lng": 43.1561,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 11,
+        "evenement": "Où Jésus a-t-il passé son agonie avant d'être arrêté ?",
+        "lieu_correct": "Gethsémané",
+        "lat": 31.7794,
+        "lng": 35.2402,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 12,
+        "evenement": "Où les langues ont-elles été confondues par Dieu ?",
+        "lieu_correct": "Babylone (Babel)",
+        "lat": 32.5436,
+        "lng": 44.4239,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 13,
+        "evenement": "Où David a-t-il combattu et tué Goliath ?",
+        "lieu_correct": "Vallée d'Éla",
+        "lat": 31.6833,
+        "lng": 34.9167,
+        "difficulte": "Difficile"
+      },
+      {
+        "id": 14,
+        "evenement": "Où Élie a-t-il défié les prophètes de Baal ?",
+        "lieu_correct": "Mont Carmel",
+        "lat": 32.7431,
+        "lng": 35.0561,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 15,
+        "evenement": "Où Pierre vivait-il (ville de la pêche) ?",
+        "lieu_correct": "Capharnaüm",
+        "lat": 32.8811,
+        "lng": 35.5750,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 16,
+        "evenement": "Où Philippe a-t-il baptisé l'eunuque éthiopien ?",
+        "lieu_correct": "Gaza (Route de)",
+        "lat": 31.5000,
+        "lng": 34.4667,
+        "difficulte": "Difficile"
+      },
+      {
+        "id": 17,
+        "evenement": "Où Jacob a-t-il eu la vision d'une échelle ?",
+        "lieu_correct": "Béthel",
+        "lat": 31.9300,
+        "lng": 35.2200,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 18,
+        "evenement": "Où Moïse est-il mort ?",
+        "lieu_correct": "Mont Nébo",
+        "lat": 31.7683,
+        "lng": 35.7253,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 19,
+        "evenement": "Où Jésus a-t-il accompli son premier miracle ?",
+        "lieu_correct": "Cana",
+        "lat": 32.7472,
+        "lng": 35.3386,
+        "difficulte": "Facile"
+      },
+      {
+        "id": 20,
+        "evenement": "Où se trouvait le palais de la reine Esther ?",
+        "lieu_correct": "Suse",
+        "lat": 32.1892,
+        "lng": 48.2578,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 21,
+        "evenement": "Où David a-t-il été roi pendant 7 ans avant Jérusalem ?",
+        "lieu_correct": "Hébron",
+        "lat": 31.5297,
+        "lng": 35.0997,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 22,
+        "evenement": "Où Jean a-t-il écrit la Révélation ?",
+        "lieu_correct": "Patmos",
+        "lat": 37.3094,
+        "lng": 26.5483,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 23,
+        "evenement": "Où Samson est-il mort ?",
+        "lieu_correct": "Gaza",
+        "lat": 31.5000,
+        "lng": 34.4500,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 24,
+        "evenement": "Où Samuel a-t-il grandi ?",
+        "lieu_correct": "Silo",
+        "lat": 32.0560,
+        "lng": 35.2890,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 25,
+        "evenement": "Où Abraham est-il né ?",
+        "lieu_correct": "Ur",
+        "lat": 30.9625,
+        "lng": 46.1031,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 26,
+        "evenement": "Où Jésus a-t-il multiplié les pains ?",
+        "lieu_correct": "Tabgha",
+        "lat": 32.8733,
+        "lng": 35.5492,
+        "difficulte": "Difficile"
+      },
+      {
+        "id": 27,
+        "evenement": "Où Moïse a-t-il vu le buisson ardent ?",
+        "lieu_correct": "Mont Horeb",
+        "lat": 28.5391,
+        "lng": 33.9740,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 28,
+        "evenement": "Où vivaient Lazare et ses sœurs ?",
+        "lieu_correct": "Béthanie",
+        "lat": 31.7711,
+        "lng": 35.2600,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 29,
+        "evenement": "Où Paul a-t-il fait naufrage ?",
+        "lieu_correct": "Malte",
+        "lat": 35.8989,
+        "lng": 14.5145,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 30,
+        "evenement": "Où Jésus a-t-il grandi ?",
+        "lieu_correct": "Nazareth",
+        "lat": 32.7019,
+        "lng": 35.3033,
+        "difficulte": "Facile"
+      },
+      {
+        "id": 31,
+        "evenement": "Où Paul a-t-il prêché sur l'Aréopage ?",
+        "lieu_correct": "Athènes",
+        "lat": 37.9719,
+        "lng": 23.7267,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 32,
+        "evenement": "Où Daniel a-t-il été jeté aux lions ?",
+        "lieu_correct": "Babylone",
+        "lat": 32.5400,
+        "lng": 44.4200,
+        "difficulte": "Facile"
+      },
+      {
+        "id": 33,
+        "evenement": "Où Ruth a-t-elle rencontré Boaz ?",
+        "lieu_correct": "Bethléem",
+        "lat": 31.7048,
+        "lng": 35.2037,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 34,
+        "evenement": "Où se trouve la piscine de Béthesda ?",
+        "lieu_correct": "Jérusalem",
+        "lat": 31.7814,
+        "lng": 35.2361,
+        "difficulte": "Difficile"
+      },
+      {
+        "id": 35,
+        "evenement": "Où Paul est-il né ?",
+        "lieu_correct": "Tarse",
+        "lat": 36.9167,
+        "lng": 34.8950,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 36,
+        "evenement": "Où se déroulera la bataille finale ?",
+        "lieu_correct": "Megiddo (Harmaguédon)",
+        "lat": 32.5850,
+        "lng": 35.1842,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 37,
+        "evenement": "Où Lot s'est-il réfugié après Sodome ?",
+        "lieu_correct": "Tsoar",
+        "lat": 31.0333,
+        "lng": 35.5000,
+        "difficulte": "Difficile"
+      },
+      {
+        "id": 38,
+        "evenement": "Où Moïse a-t-il trouvé de l'eau amère ?",
+        "lieu_correct": "Mara",
+        "lat": 29.2833,
+        "lng": 32.8333,
+        "difficulte": "Expert"
+      },
+      {
+        "id": 39,
+        "evenement": "Où Jésus a-t-il été crucifié ?",
+        "lieu_correct": "Golgotha",
+        "lat": 31.7785,
+        "lng": 35.2297,
+        "difficulte": "Facile"
+      },
+      {
+        "id": 40,
+        "evenement": "Où Néhémie a-t-il reconstruit les murailles ?",
+        "lieu_correct": "Jérusalem",
+        "lat": 31.7767,
+        "lng": 35.2345,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 41,
+        "evenement": "Où Agar a-t-elle vu l'ange ?",
+        "lieu_correct": "Beer-Schéba",
+        "lat": 31.2447,
+        "lng": 34.7997,
+        "difficulte": "Difficile"
+      },
+      {
+        "id": 42,
+        "evenement": "Où Paul est-il mort en martyr ?",
+        "lieu_correct": "Rome",
+        "lat": 41.8902,
+        "lng": 12.4922,
+        "difficulte": "Facile"
+      },
+      {
+        "id": 43,
+        "evenement": "Où Gédéon a-t-il choisi ses 300 hommes ?",
+        "lieu_correct": "Source de Harod",
+        "lat": 32.5489,
+        "lng": 35.3547,
+        "difficulte": "Expert"
+      },
+      {
+        "id": 44,
+        "evenement": "Où les disciples ont-ils été appelés chrétiens ?",
+        "lieu_correct": "Antioche",
+        "lat": 36.2025,
+        "lng": 36.1606,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 45,
+        "evenement": "Où Jacob a-t-il lutté avec l'ange ?",
+        "lieu_correct": "Peniel",
+        "lat": 32.1833,
+        "lng": 35.7167,
+        "difficulte": "Expert"
+      },
+      {
+        "id": 46,
+        "evenement": "Où Élie a-t-il été emporté au ciel ?",
+        "lieu_correct": "Jourdain (Rive Est)",
+        "lat": 31.8390,
+        "lng": 35.5490,
+        "difficulte": "Expert"
+      },
+      {
+        "id": 47,
+        "evenement": "Où se trouvait la ville de Lydie, marchande de pourpre ?",
+        "lieu_correct": "Philippes",
+        "lat": 41.0133,
+        "lng": 24.2861,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 48,
+        "evenement": "Où Jésus a-t-il rencontré la Samaritaine ?",
+        "lieu_correct": "Puits de Jacob (Sychar)",
+        "lat": 32.2094,
+        "lng": 35.2789,
+        "difficulte": "Moyen"
+      },
+      {
+        "id": 49,
+        "evenement": "Où se trouvait la capitale de l'Assyrie ?",
+        "lieu_correct": "Ninive",
+        "lat": 36.3600,
+        "lng": 43.1500,
+        "difficulte": "Facile"
+      },
+      {
+        "id": 50,
+        "evenement": "Où les Israélites ont-ils mangé la première Pâque ?",
+        "lieu_correct": "Égypte (Goshèn)",
+        "lat": 30.8500,
+        "lng": 31.8500,
+        "difficulte": "Moyen"
+      }
+    ]
+  }

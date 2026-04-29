@@ -48,6 +48,14 @@ class JsonLoader {
     return FichePersoGameConfig.fromJson(raw);
   }
 
+  Future<Map<String, dynamic>> loadVraiFaux({String langue = 'F'}) async {
+    return await loadJson('vrai_faux', langue);
+  }
+
+  Future<Map<String, dynamic>> loadCarteBiblique({String langue = 'F'}) async {
+    return await loadJson('carte_biblique', langue);
+  }
+
   /// Vide le cache (utile pour forcer un rechargement)
   void clearCache() => _cache.clear();
 
@@ -56,9 +64,9 @@ class JsonLoader {
   static const Map<String, List<String>> availableFiles = {
     'fiche_perso': ['F'],   // F = Français. Ajouter 'E' pour anglais, etc.
     'vrai_faux':   ['F'],
+    'carte_biblique': ['F'],
     'frise':       ['F'],
     'devine_verset': ['F'],
-    'jeu_map':     ['F'],
     'redaction':   ['F'],
   };
 }

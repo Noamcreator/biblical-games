@@ -54,9 +54,47 @@ class Session extends Equatable {
   bool get roundIsPlaying => roundState == 'playing';
   bool get roundIsEnded   => roundState == 'roundEnd';
   bool get roundIsIdle    => roundState == 'idle';
+  int get roundTimeSeconds => (currentQuestionData?['roundTimeSeconds'] as num?)?.toInt() ?? 20;
+  int get reviewTimeSeconds => (currentQuestionData?['reviewTimeSeconds'] as num?)?.toInt() ?? 10;
 
-  int get completedPlayersCount =>
-      players.values.where((p) => p.roundCompleted).length;
+  DateTime? get roundStartedAt {
+    final value = currentQuestionData?['roundStartedAt'] as String?;
+    if (value == null) return null;
+    try {
+      return DateTime.parse(value);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  int get roundRemainingSeconds {
+      final started = roundStartedAt;
+      if (started == null) return roundTimeSeconds;
+      final remaining = roundTimeSeconds - DateTime.now().difference(started).inSeconds;
+      return remaining.clamp(0, roundTimeSeconds);
+    }
+    int get completedPlayersCount =>
+        players.values.where((p) => p.roundCompleted).length;
+
+        DateTime? get reviewStartedAt {
+    final value = currentQuestionData?['reviewStartedAt'] as String?;
+    if (value == null) return null;
+    try {
+      return DateTime.parse(value);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  int get reviewRemainingSeconds {
+    final started = reviewStartedAt;
+    if (started == null) return reviewTimeSeconds;
+
+    final remaining = reviewTimeSeconds -
+        DateTime.now().difference(started).inSeconds;
+
+    return remaining.clamp(0, reviewTimeSeconds);
+  }
 
   // ─── Sérialisation ────────────────────────────────────────
 

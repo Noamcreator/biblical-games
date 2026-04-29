@@ -1,0 +1,811 @@
+{
+    "meta": {
+      "jeu": "vrai_faux",
+      "language": "FR",
+      "version": "2.0",
+      "description": "100 questions basées sur la Traduction du Monde Nouveau et les enseignements des Témoins de Jéhovah",
+      "difficulty_levels": ["Facile", "Moyenne", "Difficile"]
+    },
+    "questions": [
+      {
+        "id": 1,
+        "statement": "Le nom de Dieu, Jéhovah, apparaît plus de 7 000 fois dans les manuscrits originaux de la Bible.",
+        "answer": true,
+        "explanation": "Le Tétragramme (YHWH) apparaît environ 7 000 fois dans le texte hébreu original.",
+        "reference": "Psaume 83:18",
+        "difficulty": 0
+      },
+      {
+        "id": 2,
+        "statement": "Selon la Bible, l'âme est immortelle et survit à la mort du corps.",
+        "answer": false,
+        "explanation": "La Bible enseigne que l'âme 'meurt' et que les morts sont inconscients.",
+        "reference": "Ézéchiel 18:4 ; Ecclésiaste 9:5",
+        "difficulty": 0
+      },
+      {
+        "id": 3,
+        "statement": "Jésus est la première de toutes les créatures de Dieu.",
+        "answer": true,
+        "explanation": "Il est appelé 'le premier-né de toute création' et le seul créé directement par Jéhovah.",
+        "reference": "Colossiens 1:15",
+        "difficulty": 1
+      },
+      {
+        "id": 4,
+        "statement": "L'enfer est un lieu de tourment éternel où les méchants brûlent dans le feu.",
+        "answer": false,
+        "explanation": "La 'Géhenne' symbolise la destruction éternelle (la seconde mort), pas un tourment conscient.",
+        "reference": "Romains 6:23",
+        "difficulty": 0
+      },
+      {
+        "id": 5,
+        "statement": "Seul un 'petit troupeau' de 144 000 personnes ira au ciel pour régner avec Jésus.",
+        "answer": true,
+        "explanation": "Ceux-ci sont choisis pour être rois et prêtres sur la terre.",
+        "reference": "Révélation 14:1, 3",
+        "difficulty": 1
+      },
+      {
+        "id": 6,
+        "statement": "La grande foule des autres fidèles vivra éternellement sur une terre transformée en paradis.",
+        "answer": true,
+        "explanation": "Le dessein original de Dieu pour la terre sera accompli.",
+        "reference": "Psaume 37:29",
+        "difficulty": 0
+      },
+      {
+        "id": 7,
+        "statement": "Jésus est mort sur une croix en forme de 'T'.",
+        "answer": false,
+        "explanation": "Le mot grec 'stauros' désigne un poteau vertical ou un pieu de supplice.",
+        "reference": "Galates 3:13",
+        "difficulty": 1
+      },
+      {
+        "id": 8,
+        "statement": "Armaguédon est une guerre entre les nations humaines pour le contrôle des ressources.",
+        "answer": false,
+        "explanation": "C'est la 'guerre du grand jour de Dieu le Tout-Puissant' contre les royaumes de la terre.",
+        "reference": "Révélation 16:14, 16",
+        "difficulty": 0
+      },
+      {
+        "id": 9,
+        "statement": "Marie est restée vierge toute sa vie après la naissance de Jésus.",
+        "answer": false,
+        "explanation": "La Bible mentionne que Jésus avait des frères et des sœurs nés de Marie et Joseph.",
+        "reference": "Matthieu 13:55, 56",
+        "difficulty": 1
+      },
+      {
+        "id": 10,
+        "statement": "Le Royaume de Dieu est un gouvernement réel établi dans les cieux.",
+        "answer": true,
+        "explanation": "Ce n'est pas simplement une condition du cœur, mais une administration dirigée par Christ.",
+        "reference": "Daniel 2:44",
+        "difficulty": 0
+      },
+      {
+        "id": 11,
+        "statement": "Les premiers chrétiens célébraient les anniversaires de naissance.",
+        "answer": false,
+        "explanation": "Les anniversaires étaient considérés comme ayant des origines païennes.",
+        "reference": "Genèse 40:20 ; Matthieu 14:6",
+        "difficulty": 1
+      },
+      {
+        "id": 12,
+        "statement": "Le Saint-Esprit est une personne faisant partie d'une Trinité.",
+        "answer": false,
+        "explanation": "L'esprit saint est la force agissante de Dieu (sa puissance en action).",
+        "reference": "Actes 2:1-4",
+        "difficulty": 1
+      },
+      {
+        "id": 13,
+        "statement": "Noé a mis 120 ans pour construire l'arche.",
+        "answer": false,
+        "explanation": "La Bible ne précise pas la durée exacte, mais indique que les 120 ans concernent le délai avant le déluge.",
+        "reference": "Genèse 6:3",
+        "difficulty": 2
+      },
+      {
+        "id": 14,
+        "statement": "Satan le Diable était autrefois un ange parfait qui s'est rebellé contre Dieu.",
+        "answer": true,
+        "explanation": "Il a laissé l'orgueil et le désir d'être adoré corrompre son cœur.",
+        "reference": "Jean 8:44",
+        "difficulty": 0
+      },
+      {
+        "id": 15,
+        "statement": "Après Armaguédon, il y aura une résurrection des 'justes' et des 'injustes'.",
+        "answer": true,
+        "explanation": "Ceux qui n'ont pas eu l'occasion de connaître Jéhovah seront enseignés sur terre.",
+        "reference": "Actes 24:15",
+        "difficulty": 1
+      },
+      {
+        "id": 16,
+        "statement": "Les 10 commandements sont toujours en vigueur pour les chrétiens aujourd'hui.",
+        "answer": false,
+        "explanation": "La Loi mosaïque a été remplacée par la 'loi du Christ'.",
+        "reference": "Romains 10:4 ; Galates 6:2",
+        "difficulty": 2
+      },
+      {
+        "id": 17,
+        "statement": "Jéhovah a utilisé l'évolution pour créer les différentes espèces d'animaux.",
+        "answer": false,
+        "explanation": "La Bible dit que chaque animal a été créé 'selon son espèce'.",
+        "reference": "Genèse 1:24, 25",
+        "difficulty": 0
+      },
+      {
+        "id": 18,
+        "statement": "Le sang est sacré et ne doit pas être consommé, ni transfusé.",
+        "answer": true,
+        "explanation": "Le commandement de s'abstenir du sang s'applique tant à l'alimentation qu'aux usages médicaux.",
+        "reference": "Actes 15:28, 29",
+        "difficulty": 0
+      },
+      {
+        "id": 19,
+        "statement": "Babylone la Grande représente l'ensemble des fausses religions du monde.",
+        "answer": true,
+        "explanation": "Elle est décrite comme une courtisane assise sur une bête sauvage.",
+        "reference": "Révélation 17:5",
+        "difficulty": 2
+      },
+      {
+        "id": 20,
+        "statement": "Jésus est l'archange Michel.",
+        "answer": true,
+        "explanation": "La Bible indique que Michel est le nom de Jésus avant et après sa vie terrestre.",
+        "reference": "1 Thessaloniciens 4:16 ; Jude 9",
+        "difficulty": 2
+      },
+      {
+        "id": 21,
+        "statement": "Abel était le premier humain à mourir.",
+        "answer": true,
+        "explanation": "Il a été assassiné par son frère Caïn.",
+        "reference": "Genèse 4:8",
+        "difficulty": 0
+      },
+      {
+        "id": 22,
+        "statement": "Les chrétiens doivent rester neutres dans les conflits politiques et militaires.",
+        "answer": true,
+        "explanation": "Jésus a dit que ses disciples 'ne font pas partie du monde'.",
+        "reference": "Jean 17:16",
+        "difficulty": 1
+      },
+      {
+        "id": 23,
+        "statement": "Daniel a été jeté dans une fournaise ardente.",
+        "answer": false,
+        "explanation": "Ce sont ses trois compagnons (Schadrac, Méschac, Abed-Négo). Daniel a été jeté dans la fosse aux lions.",
+        "reference": "Daniel 3:19 ; 6:16",
+        "difficulty": 0
+      },
+      {
+        "id": 24,
+        "statement": "Le Millénium est la période de 1 000 ans où Jésus régnera sur la terre purifiée.",
+        "answer": true,
+        "explanation": "Pendant ce temps, l'humanité sera ramenée à la perfection.",
+        "reference": "Révélation 20:6",
+        "difficulty": 1
+      },
+      {
+        "id": 25,
+        "statement": "Le nom 'Témoins de Jéhovah' a été adopté en 1931.",
+        "answer": true,
+        "explanation": "Auparavant, ils étaient connus sous le nom d'Étudiants de la Bible.",
+        "reference": "Isaïe 43:10",
+        "difficulty": 2
+      },
+      {
+        "id": 26,
+        "statement": "La Bible contient 66 livres au total.",
+        "answer": true,
+        "explanation": "39 livres dans les Écritures hébraïques et 27 dans les Écritures grecques chrétiennes.",
+        "reference": "2 Timothée 3:16",
+        "difficulty": 0
+      },
+      {
+        "id": 27,
+        "statement": "Les chrétiens doivent célébrer la Noël pour honorer la naissance de Jésus.",
+        "answer": false,
+        "explanation": "La date du 25 décembre est d'origine païenne et Jésus n'a pas commandé de fêter sa naissance.",
+        "reference": "Luc 2:8 (Bergers dehors en hiver impossible)",
+        "difficulty": 1
+      },
+      {
+        "id": 28,
+        "statement": "Salomon était l'homme le plus sage avant Jésus.",
+        "answer": true,
+        "explanation": "Jéhovah lui a accordé un cœur sage et intelligent.",
+        "reference": "1 Rois 3:12",
+        "difficulty": 0
+      },
+      {
+        "id": 29,
+        "statement": "La ville de Jérusalem a été détruite par les Babyloniens en 607 av. n. è.",
+        "answer": true,
+        "explanation": "Cette date est fondamentale pour la chronologie biblique des Témoins de Jéhovah.",
+        "reference": "2 Rois 25:8, 9",
+        "difficulty": 2
+      },
+      {
+        "id": 30,
+        "statement": "Le signe des 'derniers jours' inclut des guerres, des famines et des épidémies.",
+        "answer": true,
+        "explanation": "Jésus a donné ces signes pour identifier la fin du système de choses.",
+        "reference": "Matthieu 24:7 ; Luc 21:11",
+        "difficulty": 0
+      },
+      {
+        "id": 31,
+        "statement": "L'apôtre Jean a été exilé sur l'île de Patmos.",
+        "answer": true,
+        "explanation": "C'est là qu'il a reçu la vision de la Révélation.",
+        "reference": "Révélation 1:9",
+        "difficulty": 1
+      },
+      {
+        "id": 32,
+        "statement": "Les démons sont des anges qui ont rejoint la rébellion de Satan avant le Déluge.",
+        "answer": true,
+        "explanation": "Ils ont quitté leur demeure naturelle pour prendre des corps humains.",
+        "reference": "Jude 6",
+        "difficulty": 1
+      },
+      {
+        "id": 33,
+        "statement": "Dieu a créé la terre en six jours de 24 heures chacun.",
+        "answer": false,
+        "explanation": "Le mot 'jour' dans la Genèse peut désigner de longues périodes de temps.",
+        "reference": "Genèse 2:4 ; 2 Pierre 3:8",
+        "difficulty": 2
+      },
+      {
+        "id": 34,
+        "statement": "Le Mémorial (ou Repas du Seigneur) doit être célébré une fois par an.",
+        "answer": true,
+        "explanation": "Il correspond à la date de la Pâque juive, le 14 Nisan.",
+        "reference": "Luc 22:19",
+        "difficulty": 1
+      },
+      {
+        "id": 35,
+        "statement": "Moïse bégayait ou avait du mal à s'exprimer.",
+        "answer": true,
+        "explanation": "Il a dit à Jéhovah qu'il n'avait pas la parole facile.",
+        "reference": "Exode 4:10",
+        "difficulty": 1
+      },
+      {
+        "id": 36,
+        "statement": "Le nom de la femme de Lot était Édith.",
+        "answer": false,
+        "explanation": "La Bible ne mentionne jamais le nom de la femme de Lot.",
+        "reference": "Genèse 19:26",
+        "difficulty": 1
+      },
+      {
+        "id": 37,
+        "statement": "L'esclave fidèle et avisé est un groupe d'hommes oints dirigeant l'œuvre mondiale.",
+        "answer": true,
+        "explanation": "Ils dispensent la 'nourriture spirituelle en temps voulu'.",
+        "reference": "Matthieu 24:45",
+        "difficulty": 2
+      },
+      {
+        "id": 38,
+        "statement": "David a commis l'adultère avec Bath-Schéba.",
+        "answer": true,
+        "explanation": "C'est l'un des péchés les plus graves de David, suivi d'une profonde repentance.",
+        "reference": "2 Samuel 11:3, 4",
+        "difficulty": 0
+      },
+      {
+        "id": 39,
+        "statement": "Tous les humains descendent d'Adam et Ève.",
+        "answer": true,
+        "explanation": "Dieu a fait d'un seul homme toutes les nations des hommes.",
+        "reference": "Actes 17:26",
+        "difficulty": 0
+      },
+      {
+        "id": 40,
+        "statement": "La prière du 'Notre Père' autorise à prier Jésus.",
+        "answer": false,
+        "explanation": "Jésus a enseigné à prier exclusivement le Père : 'Notre Père qui es dans les cieux...'.",
+        "reference": "Matthieu 6:9",
+        "difficulty": 1
+      },
+      {
+        "id": 41,
+        "statement": "Samson a tué un lion à mains nues.",
+        "answer": true,
+        "explanation": "L'esprit de Jéhovah a agi sur lui pour lui donner une force extraordinaire.",
+        "reference": "Juges 14:6",
+        "difficulty": 0
+      },
+      {
+        "id": 42,
+        "statement": "La prédication de porte en porte est une obligation pour les chrétiens.",
+        "answer": true,
+        "explanation": "Les apôtres enseignaient 'de maison en maison'.",
+        "reference": "Actes 5:42 ; 20:20",
+        "difficulty": 1
+      },
+      {
+        "id": 43,
+        "statement": "L'arche de l'alliance contenait les tables de la Loi, de la manne et le bâton d'Aaron.",
+        "answer": true,
+        "explanation": "Ces objets rappelaient les actes de Jéhovah envers Israël.",
+        "reference": "Hébreux 9:4",
+        "difficulty": 1
+      },
+      {
+        "id": 44,
+        "statement": "Goliath mesurait environ 3 mètres de haut.",
+        "answer": true,
+        "explanation": "Il mesurait six coudées et un empan.",
+        "reference": "1 Samuel 17:4",
+        "difficulty": 2
+      },
+      {
+        "id": 45,
+        "statement": "Les Témoins de Jéhovah croient que 1914 est l'année où Jésus a commencé à régner au ciel.",
+        "answer": true,
+        "explanation": "Cette date marque la fin des 'temps fixés des nations'.",
+        "reference": "Luc 21:24 ; Daniel 4:16",
+        "difficulty": 2
+      },
+      {
+        "id": 46,
+        "statement": "Paul était marié lorsqu'il est devenu apôtre.",
+        "answer": false,
+        "explanation": "Il recommandait le célibat pour mieux servir Dieu, bien qu'il ne l'imposait pas.",
+        "reference": "1 Corinthiens 7:7, 8",
+        "difficulty": 2
+      },
+      {
+        "id": 47,
+        "statement": "Le déluge a couvert les plus hautes montagnes de la terre.",
+        "answer": true,
+        "explanation": "Les eaux se sont élevées de 15 coudées au-dessus des sommets.",
+        "reference": "Genèse 7:19, 20",
+        "difficulty": 1
+      },
+      {
+        "id": 48,
+        "statement": "Jéhovah se sert de son organisation terrestre pour guider ses adorateurs.",
+        "answer": true,
+        "explanation": "Comme au premier siècle, un collège central supervise l'œuvre.",
+        "reference": "Actes 15:2",
+        "difficulty": 1
+      },
+      {
+        "id": 49,
+        "statement": "La Bible interdit de fêter Pâques avec des œufs et des lapins.",
+        "answer": true,
+        "explanation": "Ces symboles sont liés à d'anciens rites de fertilité païens.",
+        "reference": "2 Corinthiens 6:17",
+        "difficulty": 1
+      },
+      {
+        "id": 50,
+        "statement": "Le paradis sera rétabli sur terre après la destruction du système actuel.",
+        "answer": true,
+        "explanation": "C'est la promesse centrale de la Bible concernant l'avenir de l'humanité.",
+        "reference": "Révélation 21:3, 4",
+        "difficulty": 0
+      },
+      {
+        "id": 51,
+        "statement": "Le mot hébreu 'Shéol' et le mot grec 'Hadès' désignent exactement la même chose : la tombe commune aux humains.",
+        "answer": true,
+        "explanation": "Le Nouveau Testament cite souvent l'Ancien en traduisant Shéol par Hadès.",
+        "reference": "Psaume 16:10 ; Actes 2:27",
+        "difficulty": 1
+      },
+      {
+        "id": 52,
+        "statement": "Melchisédech, roi de Salem, n'avait selon la Bible ni père, ni mère, ni généalogie.",
+        "answer": true,
+        "explanation": "La Bible ne mentionne pas ses origines pour en faire un 'type' prophétique du sacerdoce éternel de Jésus.",
+        "reference": "Hébreux 7:3",
+        "difficulty": 1
+      },
+      {
+        "id": 53,
+        "statement": "La 'prostituée' de la Révélation est assise sur une bête qui a 10 têtes et 7 cornes.",
+        "answer": false,
+        "explanation": "C'est l'inverse : la bête a 7 têtes et 10 cornes.",
+        "reference": "Révélation 17:3",
+        "difficulty": 2
+      },
+      {
+        "id": 54,
+        "statement": "Le roi Nabuchodonosor a passé 7 ans à vivre comme une bête sauvage.",
+        "answer": true,
+        "explanation": "Ces 'sept temps' préfiguraient l'interruption de la souveraineté de Dieu sur terre.",
+        "reference": "Daniel 4:32, 33",
+        "difficulty": 1
+      },
+      {
+        "id": 55,
+        "statement": "L'apôtre Paul a affirmé avoir été emporté jusqu'au 'quatrième ciel'.",
+        "answer": false,
+        "explanation": "Il a parlé du 'troisième ciel', représentant le degré suprême de gouvernement spirituel.",
+        "reference": "2 Corinthiens 12:2",
+        "difficulty": 1
+      },
+      {
+        "id": 56,
+        "statement": "Lors de la transfiguration, Moïse et Élie étaient réellement présents aux côtés de Jésus.",
+        "answer": false,
+        "explanation": "C'était une vision, car Moïse était mort et attendait la résurrection.",
+        "reference": "Matthieu 17:9",
+        "difficulty": 1
+      },
+      {
+        "id": 57,
+        "statement": "Le nom de l'ange de l'abîme dans la Révélation est Abaddon en hébreu et Apollyon en grec.",
+        "answer": true,
+        "explanation": "Ces noms signifient 'Destruction' et 'Destructeur', identifiant Jésus dans son rôle de juge.",
+        "reference": "Révélation 9:11",
+        "difficulty": 2
+      },
+      {
+        "id": 58,
+        "statement": "Dans la généalogie de Jésus en Luc, le père de Joseph est héli.",
+        "answer": true,
+        "explanation": "Héli était probablement le père de Marie, donc le beau-père de Joseph (Luc retrace la lignée biologique de Marie).",
+        "reference": "Luc 3:23",
+        "difficulty": 2
+      },
+      {
+        "id": 59,
+        "statement": "L'expression 'Parousia' (présence) de Christ est identique au mot 'Erkhomaï' (venue).",
+        "answer": false,
+        "explanation": "La 'parousia' désigne une période de présence invisible, tandis que 'erkhomaï' désigne souvent l'acte de venir pour juger.",
+        "reference": "Matthieu 24:3",
+        "difficulty": 2
+      },
+      {
+        "id": 60,
+        "statement": "Les 2 300 soirs et matins de Daniel 8 concernent la purification du lieu saint.",
+        "answer": true,
+        "explanation": "Cette prophétie s'est accomplie durant la Seconde Guerre mondiale concernant le peuple de Dieu.",
+        "reference": "Daniel 8:14",
+        "difficulty": 2
+      },
+      {
+        "id": 61,
+        "statement": "Cyrus le Grand a été nommé par Jéhovah dans la Bible plus de 150 ans avant sa naissance.",
+        "answer": true,
+        "explanation": "Isaïe a prédit qu'il ouvrirait les portes de Babylone.",
+        "reference": "Isaïe 44:28 ; 45:1",
+        "difficulty": 1
+      },
+      {
+        "id": 62,
+        "statement": "Le Diable a été jeté du ciel immédiatement après la naissance de Jésus sur terre.",
+        "answer": false,
+        "explanation": "Il a été jeté après l'intronisation de Jésus comme Roi céleste en 1914.",
+        "reference": "Révélation 12:7-9",
+        "difficulty": 1
+      },
+      {
+        "id": 63,
+        "statement": "Le 'petit cor' mentionné en Daniel 7 représente la puissance mondiale anglo-américaine.",
+        "answer": true,
+        "explanation": "Il émerge de la quatrième bête (Rome) et supplante trois autres cornes.",
+        "reference": "Daniel 7:8",
+        "difficulty": 2
+      },
+      {
+        "id": 64,
+        "statement": "La fête des huttes (Tabernacles) durait 10 jours.",
+        "answer": false,
+        "explanation": "Elle durait 7 jours, suivis d'un huitième jour de rassemblement solennel.",
+        "reference": "Lévitique 23:34, 36",
+        "difficulty": 1
+      },
+      {
+        "id": 65,
+        "statement": "L'apôtre Pierre a utilisé 'les clés du Royaume' pour ouvrir l'accès aux Juifs, aux Samaritains et aux Gentils.",
+        "answer": true,
+        "explanation": "Il y avait trois clés pour trois groupes successifs.",
+        "reference": "Actes 2, 8 et 10",
+        "difficulty": 2
+      },
+      {
+        "id": 66,
+        "statement": "La ville de Tyr a été prophétisée comme devant être un lieu où l'on étendrait des filets de pêche.",
+        "answer": true,
+        "explanation": "Cette prophétie de l'anéantissement total de la ville s'est réalisée littéralement.",
+        "reference": "Ézéchiel 26:5",
+        "difficulty": 1
+      },
+      {
+        "id": 67,
+        "statement": "Les 144 000 sont tous issus des 12 tribus d'Israël biologique.",
+        "answer": false,
+        "explanation": "Il s'agit de l'Israël spirituel ; la liste des tribus en Révélation 7 diffère de la liste biologique.",
+        "reference": "Galates 6:16 ; Révélation 7:4-8",
+        "difficulty": 1
+      },
+      {
+        "id": 68,
+        "statement": "Le mot 'croix' n'apparaît jamais dans le texte grec original de la Bible.",
+        "answer": true,
+        "explanation": "Le mot est 'stauros', signifiant poteau ou pieu.",
+        "reference": "Actes 5:30 (TMN)",
+        "difficulty": 1
+      },
+      {
+        "id": 69,
+        "statement": "Énoch a été le premier homme à être enlevé au ciel pour vivre avec Dieu.",
+        "answer": false,
+        "explanation": "Il a été 'transféré' pour ne pas voir les souffrances de la mort, mais aucun homme n'est monté au ciel avant Jésus.",
+        "reference": "Jean 3:13 ; Hébreux 11:5",
+        "difficulty": 2
+      },
+      {
+        "id": 70,
+        "statement": "Le roi Josias est mort lors d'une bataille contre Pharaon Néko à Megiddo.",
+        "answer": true,
+        "explanation": "Il a ignoré l'avertissement divin transmis par le Pharaon.",
+        "reference": "2 Chroniques 35:22",
+        "difficulty": 2
+      },
+      {
+        "id": 71,
+        "statement": "Le 'Léviathan' mentionné en Job 41 représente le crocodile.",
+        "answer": true,
+        "explanation": "La description correspond aux caractéristiques physiques de cet animal robuste.",
+        "reference": "Job 41:1",
+        "difficulty": 1
+      },
+      {
+        "id": 72,
+        "statement": "Lors du repas du Seigneur, le vin représente le corps de Jésus.",
+        "answer": false,
+        "explanation": "Le vin représente son sang versé ; c'est le pain sans levain qui représente son corps.",
+        "reference": "Matthieu 26:26-28",
+        "difficulty": 1
+      },
+      {
+        "id": 73,
+        "statement": "La prophétie des '70 semaines' de Daniel permet de calculer l'année précise de l'apparition du Messie.",
+        "answer": true,
+        "explanation": "Elles commencent en 455 av. n. è. et mènent à l'an 29 de n. è.",
+        "reference": "Daniel 9:24, 25",
+        "difficulty": 2
+      },
+      {
+        "id": 74,
+        "statement": "L'apôtre Paul a été mordu par une vipère sur l'île de Malte, mais n'en a subi aucun mal.",
+        "answer": true,
+        "explanation": "Les habitants ont cru qu'il était un dieu à cause de cela.",
+        "reference": "Actes 28:3-6",
+        "difficulty": 1
+      },
+      {
+        "id": 75,
+        "statement": "Le terme 'Géhenne' tire son origine d'une décharge publique située à l'extérieur de Jérusalem.",
+        "answer": true,
+        "explanation": "La vallée de Hinnom, où l'on brûlait les ordures et les cadavres de criminels.",
+        "reference": "Matthieu 5:22",
+        "difficulty": 1
+      },
+      {
+        "id": 76,
+        "statement": "Le roi Balthazar était le fils direct de Nabuchodonosor.",
+        "answer": false,
+        "explanation": "Il était le fils de Nabonide et le petit-fils (ou descendant) de Nabuchodonosor.",
+        "reference": "Daniel 5:11",
+        "difficulty": 2
+      },
+      {
+        "id": 77,
+        "statement": "Le premier miracle de Jésus a été la guérison d'un aveugle.",
+        "answer": false,
+        "explanation": "C'était le changement de l'eau en vin aux noces de Cana.",
+        "reference": "Jean 2:11",
+        "difficulty": 1
+      },
+      {
+        "id": 78,
+        "statement": "La femme mentionnée en Révélation 12 est vêtue du soleil et a la lune sous ses pieds.",
+        "answer": true,
+        "explanation": "Elle représente l'organisation céleste de Dieu composée de créatures spirituelles.",
+        "reference": "Révélation 12:1",
+        "difficulty": 2
+      },
+      {
+        "id": 79,
+        "statement": "Le prophète Élie a été emporté au ciel pour vivre éternellement avec Jéhovah à ce moment-là.",
+        "answer": false,
+        "explanation": "Il a été transporté vers un autre lieu sur terre, car il a écrit une lettre au roi Joram des années plus tard.",
+        "reference": "2 Chroniques 21:12",
+        "difficulty": 2
+      },
+      {
+        "id": 80,
+        "statement": "Le nom 'Jéhovah-Jiré' signifie 'Jéhovah pourvoira'.",
+        "answer": true,
+        "explanation": "Abraham a donné ce nom au lieu où il a failli sacrifier Isaac.",
+        "reference": "Genèse 22:14",
+        "difficulty": 1
+      },
+      {
+        "id": 81,
+        "statement": "L'apôtre Jean est le seul rédacteur de la Bible à avoir écrit sur les 'trois témoins' célestes (la Trinité) dans le texte original.",
+        "answer": false,
+        "explanation": "Le passage de 1 Jean 5:7 sur les trois témoins est un ajout apocryphe tardif (Comma Johanneum).",
+        "reference": "1 Jean 5:7 (voir notes de la TMN)",
+        "difficulty": 2
+      },
+      {
+        "id": 82,
+        "statement": "Le message de 'la bonne nouvelle' doit être prêché sur toute la terre avant que la fin vienne.",
+        "answer": true,
+        "explanation": "C'est la mission principale donnée par Jésus pour notre époque.",
+        "reference": "Matthieu 24:14",
+        "difficulty": 0
+      },
+      {
+        "id": 83,
+        "statement": "L'arche de Noé était équipée d'un gouvernail pour diriger la navigation.",
+        "answer": false,
+        "explanation": "C'était un coffre flottant sans moyen de direction humaine ; Jéhovah la dirigeait.",
+        "reference": "Genèse 6:14-16",
+        "difficulty": 1
+      },
+      {
+        "id": 84,
+        "statement": "Le 'roi du Nord' et le 'roi du Sud' sont des entités politiques qui changent au cours de l'histoire.",
+        "answer": true,
+        "explanation": "Leurs identités évoluent selon les puissances qui dominent et s'opposent au peuple de Dieu.",
+        "reference": "Daniel 11",
+        "difficulty": 2
+      },
+      {
+        "id": 85,
+        "statement": "La 'Sainte Cité, la Nouvelle Jérusalem' compte 14 portes.",
+        "answer": false,
+        "explanation": "Elle compte 12 portes, chacune portant le nom d'une des 12 tribus d'Israël.",
+        "reference": "Révélation 21:12",
+        "difficulty": 1
+      },
+      {
+        "id": 86,
+        "statement": "Le péché contre l'esprit saint est impardonnable.",
+        "answer": true,
+        "explanation": "Il s'agit d'une rébellion volontaire et consciente contre l'action manifeste de Dieu.",
+        "reference": "Matthieu 12:31",
+        "difficulty": 1
+      },
+      {
+        "id": 87,
+        "statement": "Salomon a écrit le livre des Psaumes en entier.",
+        "answer": false,
+        "explanation": "Il n'en a écrit que deux (72 et 127). La majorité sont de David.",
+        "reference": "Psaumes (Introduction)",
+        "difficulty": 1
+      },
+      {
+        "id": 88,
+        "statement": "Le nom 'Harmaguédon' vient de l'hébreu 'Har Meghiddôn', qui signifie 'Montagne de Megiddo'.",
+        "answer": true,
+        "explanation": "Bien qu'il n'y ait pas de montagne physique à Megiddo, cela symbolise un lieu de rassemblement décisif.",
+        "reference": "Révélation 16:16",
+        "difficulty": 1
+      },
+      {
+        "id": 89,
+        "statement": "La Loi mosaïque contenait exactement 100 lois.",
+        "answer": false,
+        "explanation": "Elle comprenait plus de 600 lois (613 selon la tradition juive).",
+        "reference": "Exode/Lévitique/Nombres/Deutéronome",
+        "difficulty": 1
+      },
+      {
+        "id": 90,
+        "statement": "Jésus est appelé l' 'Amen' dans le livre de la Révélation.",
+        "answer": true,
+        "explanation": "Parce qu'il est la garantie que toutes les promesses de Dieu s'accompliront.",
+        "reference": "Révélation 3:14",
+        "difficulty": 1
+      },
+      {
+        "id": 91,
+        "statement": "Le Diable sera détruit immédiatement au début des 1 000 ans.",
+        "answer": false,
+        "explanation": "Il sera lié dans l'abîme pendant 1 000 ans, puis relâché brièvement avant sa destruction finale.",
+        "reference": "Révélation 20:1-3, 10",
+        "difficulty": 1
+      },
+      {
+        "id": 92,
+        "statement": "Le 'Septième Jour' de création (le jour de repos de Dieu) n'est pas encore terminé.",
+        "answer": true,
+        "explanation": "Nous vivons toujours dans la période où Dieu se repose de ses œuvres créatrices terrestres.",
+        "reference": "Hébreux 4:3-11",
+        "difficulty": 2
+      },
+      {
+        "id": 93,
+        "statement": "La manne avait un goût de gâteau de miel.",
+        "answer": true,
+        "explanation": "C'est ainsi que la Bible décrit la saveur de cette nourriture miraculeuse.",
+        "reference": "Exode 16:31",
+        "difficulty": 1
+      },
+      {
+        "id": 94,
+        "statement": "L'apôtre Paul a été instruit aux pieds du célèbre enseignant Gamaliel.",
+        "answer": true,
+        "explanation": "Cela montre qu'il avait une éducation de haut niveau dans la Loi juive.",
+        "reference": "Actes 22:3",
+        "difficulty": 1
+      },
+      {
+        "id": 95,
+        "statement": "Jésus est le médiateur entre Dieu et toute l'humanité sans exception.",
+        "answer": false,
+        "explanation": "Au sens strict de la 'nouvelle alliance', il est le médiateur pour ceux qui composent l'Israël spirituel.",
+        "reference": "1 Timothée 2:5 ; Hébreux 9:15",
+        "difficulty": 2
+      },
+      {
+        "id": 96,
+        "statement": "L'esclave fidèle et avisé a été nommé sur tous les biens du Maître en 1919.",
+        "answer": true,
+        "explanation": "Après une inspection du temple spirituel commencée en 1914.",
+        "reference": "Matthieu 24:47",
+        "difficulty": 2
+      },
+      {
+        "id": 97,
+        "statement": "Le livre de la Révélation identifie les 144 000 comme ayant le nom du Père écrit sur leur front.",
+        "answer": true,
+        "explanation": "Cela signifie qu'ils appartiennent à Jéhovah et lui sont fidèles.",
+        "reference": "Révélation 14:1",
+        "difficulty": 1
+      },
+      {
+        "id": 98,
+        "statement": "La résurrection céleste commence après la résurrection terrestre.",
+        "answer": false,
+        "explanation": "La résurrection céleste (la première résurrection) a déjà commencé pour les oints fidèles décédés.",
+        "reference": "1 Corinthiens 15:23 ; Révélation 20:6",
+        "difficulty": 2
+      },
+      {
+        "id": 99,
+        "statement": "Il n'y a qu'un seul archange mentionné dans la Bible.",
+        "answer": true,
+        "explanation": "Le terme 'archange' est toujours au singulier et désigne Michel (Jésus).",
+        "reference": "Jude 9 ; 1 Thessaloniciens 4:16",
+        "difficulty": 2
+      },
+      {
+        "id": 100,
+        "statement": "Après les 1 000 ans, Jésus rendra le Royaume à son Père, Jéhovah.",
+        "answer": true,
+        "explanation": "Une fois que l'humanité sera parfaite et le dessein accompli, Dieu sera 'toutes choses pour tous'.",
+        "reference": "1 Corinthiens 15:24-28",
+        "difficulty": 2
+      }
+    ]
+  }

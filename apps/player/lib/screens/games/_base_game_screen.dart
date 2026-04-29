@@ -92,14 +92,12 @@ class BaseGameScreen extends StatelessWidget {
                     Expanded(
                       child: session.isFinished
                           ? const SizedBox()
-                          : session.isReviewing
-                              ? _ReviewBanner(primary: primaryBlue)
-                              : session.currentQuestionData == null
-                                  ? _WaitingView(primary: primaryBlue)
-                                  : SingleChildScrollView(
-                                      padding: const EdgeInsets.fromLTRB(12, 8, 12, 24),
-                                      child: questionBuilder(session.currentQuestionData!),
-                                    ),
+                          : session.currentQuestionData == null
+                              ? _WaitingView(primary: primaryBlue)
+                              : SingleChildScrollView(
+                                  padding: const EdgeInsets.fromLTRB(12, 8, 12, 24),
+                                  child: questionBuilder(session.currentQuestionData!),
+                                ),
                     ),
                   ],
                 ),
@@ -180,7 +178,7 @@ class _TopBar extends StatelessWidget {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
-                      'Q ${session.currentQuestionIndex + 1}/${session.totalQuestions}',
+                      'Question ${session.currentQuestionIndex + 1}/${session.totalQuestions}',
                       style: const TextStyle(
                         color:      Colors.white,
                         fontSize:   13,

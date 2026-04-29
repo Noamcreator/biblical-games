@@ -191,9 +191,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       _buildGlassCard(
                         child: Column(
                           children: [
-                            _buildSimpleTile(Icons.info_outline, "Version de l'application", "1.0.0"),
+                            _buildSimpleTile(Icons.info_outline, "Version de l'application", "1.0.0", null),
                             const Divider(color: Colors.white10),
-                            _buildSimpleTile(Icons.security_rounded, "Politique de confidentialité", null),
+                            _buildSimpleTile(Icons.security_rounded, "Licences", null, () => showLicensePage(context: context)),
                           ],
                         ),
                       ),
@@ -240,8 +240,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget _buildSimpleTile(IconData icon, String title, String? trailing) {
+  Widget _buildSimpleTile(IconData icon, String title, String? trailing, VoidCallback? onTap) {
     return ListTile(
+      onTap: onTap,
       leading: Icon(icon, color: Colors.white70),
       title: Text(title, style: const TextStyle(color: Colors.white, fontSize: 15)),
       trailing: trailing != null 

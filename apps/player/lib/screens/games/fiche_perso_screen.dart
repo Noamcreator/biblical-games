@@ -94,9 +94,32 @@ class _FichePersoGameState extends State<_FichePersoGame>
   @override
   void didUpdateWidget(covariant _FichePersoGame old) {
     super.didUpdateWidget(old);
-    if (!mapEquals(old.data, widget.data)) {
+
+    final oldRoundId = old.data['currentPersonnageId'] as String?;
+    final newRoundId = widget.data['currentPersonnageId'] as String?;
+    final oldRoundNumber = (old.data['roundNumber'] as num?)?.toInt() ?? 0;
+    final newRoundNumber = (widget.data['roundNumber'] as num?)?.toInt() ?? 0;
+    final oldRoundState = old.data['roundState'] as String? ?? 'idle';
+    final newRoundState = widget.data['roundState'] as String? ?? 'idle';
+
+    if (oldRoundId != newRoundId || oldRoundNumber != newRoundNumber) {
       _question = _parseQuestion();
       _resetRound();
+      return;
+    }
+
+    if (oldRoundState != newRoundState) {
+      if (newRoundState == 'roundEnd' && _phase == _Phase.playing) {
+        _roundTimer?.cancel();
+        setState(() {
+          _hasSubmitted = true;
+        });
+        _enterReview(_question.fiche.validateBoard(_buildPlacements()));
+      }
+      if (newRoundState == 'playing' && _phase == _Phase.review) {
+        _question = _parseQuestion();
+        _resetRound();
+      }
     }
   }
 
@@ -176,6 +199,7 @@ class _FichePersoGameState extends State<_FichePersoGame>
   Future<void> _doSubmit() async {
     final placements = _buildPlacements();
     final result     = _question.fiche.validateBoard(placements);
+    final points     = _computePoints(result);
     final service    = SessionService();
     final uid        = service.currentUid ?? '';
     if (uid.isNotEmpty) {
@@ -184,9 +208,21 @@ class _FichePersoGameState extends State<_FichePersoGame>
         playerId:   uid,
         placements: placements,
         isCorrect:  result.isCorrect,
+        points:     points,
       );
     }
     _enterReview(result);
+  }
+
+  int _computePoints(ValidationResult result) {
+    final activeSlots = fichePersoSlots
+        .where((slot) => _question.isActiveSlot(slot.champ) && !_question.champsVisibles.contains(slot.champ))
+        .length;
+    final correctCount = activeSlots - result.wrongSlots.length;
+    final basePoints = correctCount * 10;
+    final bonus = result.isCorrect ? 20 : 0;
+    final timeBonus = (_roundSeconds > 0 ? _roundSeconds : 0).clamp(0, 20);
+    return basePoints + bonus + timeBonus;
   }
 
   Map<String, String> _buildPlacements() {
@@ -203,6 +239,7 @@ class _FichePersoGameState extends State<_FichePersoGame>
   }
 
   void _enterReview(ValidationResult result) {
+    _roundTimer?.cancel();
     final secs = _question.reviewTimeSeconds;
     setState(() {
       _phase        = _Phase.review;
@@ -253,58 +290,82 @@ class _FichePersoGameState extends State<_FichePersoGame>
     final ratio = total > 0 ? _roundSeconds / total : 0.0;
     final isLow = _roundSeconds <= 10;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // ── Timer ──────────────────────────────────────────
-        _TimerBar(seconds: _roundSeconds, ratio: ratio.clamp(0, 1), isLow: isLow),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final useSplitLayout = constraints.maxWidth > 560;
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ── Timer ──────────────────────────────────────────
+            _TimerBar(seconds: _roundSeconds, ratio: ratio.clamp(0, 1), isLow: isLow),
 
-        const SizedBox(height: 10),
+            const SizedBox(height: 10),
 
-        // ── Affiche centrale ───────────────────────────────
-        _CharacterBoard(
-          question:  _question,
-          placed:    _placed,
-          onPlace:   _placeCard,
-          onRemove:  _removeCard,
-        ),
+            if (useSplitLayout)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 4,
+                    child: _CharacterSummary(
+                      question: _question,
+                      placed: _placed,
+                      onRemove: _removeCard,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    flex: 5,
+                    child: _CategoryAccordion(
+                      question: _question,
+                      selectedCategory: _selectedCategory,
+                      onCategoryChange: (cat) => setState(() => _selectedCategory = cat),
+                      isPlaced: _isPlaced,
+                      onPlace: (valeur) {
+                        final champ = _question.categoryToChamp(_selectedCategory ?? '');
+                        if (champ != null) _placeCard(champ, valeur);
+                      },
+                    ),
+                  ),
+                ],
+              )
+            else
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _CharacterSummary(
+                    question: _question,
+                    placed: _placed,
+                    onRemove: _removeCard,
+                  ),
+                  const SizedBox(height: 16),
+                  _CategoryAccordion(
+                    question: _question,
+                    selectedCategory: _selectedCategory,
+                    onCategoryChange: (cat) => setState(() => _selectedCategory = cat),
+                    isPlaced: _isPlaced,
+                    onPlace: (valeur) {
+                      final champ = _question.categoryToChamp(_selectedCategory ?? '');
+                      if (champ != null) _placeCard(champ, valeur);
+                    },
+                  ),
+                ],
+              ),
 
-        const SizedBox(height: 14),
+            const SizedBox(height: 20),
 
-        // ── Onglets catégories ─────────────────────────────
-        _CategoryTabs(
-          categories:       _question.categoryGroups.keys.toList(),
-          selected:         _selectedCategory,
-          onSelect:         (cat) => setState(() => _selectedCategory = cat),
-          categoryMeta:     _question.categoryMeta,
-        ),
+            // ── Bouton valider ─────────────────────────────────
+            _SubmitButton(
+              allFilled: _allFilled(),
+              isSubmitting: _isSubmitting,
+              hasSubmitted: _hasSubmitted,
+              onTap: _submit,
+            ),
 
-        const SizedBox(height: 8),
-
-        // ── Cartes de la catégorie sélectionnée ───────────
-        if (_selectedCategory != null)
-          _CardsRow(
-            cards:    _question.categoryGroups[_selectedCategory!] ?? [],
-            isPlaced: _isPlaced,
-            onPlace:  (valeur) {
-              // Trouver le slot correspondant à la catégorie
-              final champ = _question.categoryToChamp(_selectedCategory!);
-              if (champ != null) _placeCard(champ, valeur);
-            },
-          ),
-
-        const SizedBox(height: 20),
-
-        // ── Bouton valider ─────────────────────────────────
-        _SubmitButton(
-          allFilled:    _allFilled(),
-          isSubmitting: _isSubmitting,
-          hasSubmitted: _hasSubmitted,
-          onTap:        _submit,
-        ),
-
-        const SizedBox(height: 8),
-      ],
+            const SizedBox(height: 8),
+          ],
+        );
+      },
     );
   }
 
@@ -779,6 +840,162 @@ class _CardsRow extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _CategoryAccordion extends StatelessWidget {
+  final FichePersoQuestion question;
+  final String? selectedCategory;
+  final void Function(String) onCategoryChange;
+  final bool Function(String) isPlaced;
+  final void Function(String) onPlace;
+
+  const _CategoryAccordion({
+    required this.question,
+    required this.selectedCategory,
+    required this.onCategoryChange,
+    required this.isPlaced,
+    required this.onPlace,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final entries = question.categoryGroups.entries.toList();
+    return ExpansionPanelList.radio(
+      elevation: 0,
+      expandedHeaderPadding: EdgeInsets.zero,
+      initialOpenPanelValue: selectedCategory,
+      children: entries.map((entry) {
+        final category = entry.key;
+        final cards = entry.value;
+        final meta = question.categoryMeta[category];
+        return ExpansionPanelRadio(
+          value: category,
+          headerBuilder: (context, isExpanded) {
+            return ListTile(
+              contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+              leading: Text(meta?.emoji ?? '📌', style: const TextStyle(fontSize: 20)),
+              title: Text(meta?.label ?? category, style: const TextStyle(fontWeight: FontWeight.w700)),
+            );
+          },
+          body: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: cards.map((card) {
+                return GestureDetector(
+                  onTap: isPlaced(card.valeur) ? null : () => onPlace(card.valeur),
+                  child: _CardChip(card: card, isPlaced: isPlaced(card.valeur)),
+                );
+              }).toList(),
+            ),
+          ),
+        );
+      }).toList(),
+      expansionCallback: (index, isExpanded) {
+        onCategoryChange(entries[index].key);
+      },
+    );
+  }
+}
+
+class _CharacterSummary extends StatelessWidget {
+  final FichePersoQuestion      question;
+  final Map<String, String>     placed;
+  final void Function(String)   onRemove;
+
+  const _CharacterSummary({
+    required this.question,
+    required this.placed,
+    required this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(22),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        child: Container(
+          padding: const EdgeInsets.all(18),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.88),
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(color: Colors.black12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 45,
+                    height: 45,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF3949AB).withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: const Icon(Icons.person_rounded, color: Color(0xFF3949AB), size: 28),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      question.fiche.nom,
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Color(0xFF283593)),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _InfoRow(label: 'Lieu', value: question.fiche.localisation),
+              _InfoRow(label: 'Rôle', value: question.fiche.role),
+              _InfoRow(label: 'Période', value: question.fiche.periodeHistorique),
+              const SizedBox(height: 16),
+              Text('Réponses placées', style: TextStyle(color: Colors.grey.shade700, fontWeight: FontWeight.w700)),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: fichePersoSlots
+                    .where((slot) => !question.champsVisibles.contains(slot.champ) && question.isActiveSlot(slot.champ))
+                    .map((slot) {
+                  final value = placed[slot.champ];
+                  return Chip(
+                    label: Text(value ?? slot.label, overflow: TextOverflow.ellipsis),
+                    backgroundColor: value != null ? Colors.green.shade50 : Colors.grey.shade100,
+                    deleteIcon: value != null ? const Icon(Icons.close, size: 16) : null,
+                    onDeleted: value != null ? () => onRemove(slot.champ) : null,
+                  );
+                }).toList(),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  final String label;
+  final String value;
+  const _InfoRow({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('$label : ', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+          Expanded(
+            child: Text(value, style: const TextStyle(fontSize: 13), maxLines: 2, overflow: TextOverflow.ellipsis),
+          ),
+        ],
       ),
     );
   }
