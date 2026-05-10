@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/games/fiche_perso.dart';
-import '../models/games/vrai_ou_faux.dart';
-import '../models/games/devine_verset.dart';
 import '../models/session.dart';
 import '../models/player.dart';
 import '../models/game_type.dart';
@@ -51,7 +49,7 @@ class SessionService {
   Future<Session> createSession({
     required GameType gameType,
     required int totalQuestions,
-    int roundTimeSeconds = 60,
+    int roundTimeSeconds = 10,
     bool sameCardForAll = true,
   }) async {
     switch (gameType) {
@@ -251,7 +249,7 @@ class SessionService {
     final personnages = Map<String, dynamic>.from(
         qData['personnages'] as Map<String, dynamic>? ?? {});
     final sameCardForAll   = qData['sameCardForAll']   as bool? ?? true;
-    final roundTimeSeconds = (qData['roundTimeSeconds'] as num?)?.toInt() ?? 60;
+    final roundTimeSeconds = (qData['roundTimeSeconds'] as num?)?.toInt() ?? 10;
     final reviewTimeSeconds = (qData['reviewTimeSeconds'] as num?)?.toInt() ?? 15;
 
     if (queue.isEmpty) {
@@ -391,6 +389,7 @@ class SessionService {
   Future<void> showReview(String code) async {
     await _sessions.doc(code).update({
       'state': SessionState.reviewing.name,
+      'currentQuestionData.reviewStartedAt': DateTime.now().toIso8601String(),
     });
   }
 
@@ -480,6 +479,24 @@ class SessionService {
     });
   }
 
+  Future<void> forceEndRound(String code) async {
+    final doc = await _sessions.doc(code).get();
+    if (!doc.exists) return;
+
+    final session = Session.fromMap(doc.data()!);
+
+    if (session.state == SessionState.reviewing ||
+        session.state == SessionState.finished) {
+      return;
+    }
+
+    await _sessions.doc(code).update({
+      'state': SessionState.reviewing.name,
+      'currentQuestionData.roundState': 'roundEnd',
+      'currentQuestionData.reviewStartedAt': DateTime.now().toIso8601String(),
+    });
+  }
+
   // ═══════════════════════════════════════════════════════════
   // ── AUTRE JEU (exemple de structure séparée) ───────────────
   // ═══════════════════════════════════════════════════════════
@@ -528,24 +545,6 @@ class SessionService {
 
     // Vérifie automatiquement si tout le monde a terminé
     await _endRoundIfAllCompleted(sessionCode);
-  }
-
-  Future<void> forceEndRound(String code) async {
-    final doc = await _sessions.doc(code).get();
-    if (!doc.exists) return;
-
-    final session = Session.fromMap(doc.data()!);
-
-    if (session.state == SessionState.reviewing ||
-        session.state == SessionState.finished) {
-      return;
-    }
-
-    await _sessions.doc(code).update({
-      'state': SessionState.reviewing.name,
-      'currentQuestionData.roundState': 'roundEnd',
-      'currentQuestionData.reviewStartedAt': DateTime.now().toIso8601String(),
-    });
   }
 
   Future<void> autoAdvanceAfterReview(String code) async {

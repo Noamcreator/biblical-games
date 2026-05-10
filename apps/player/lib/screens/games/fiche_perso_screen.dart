@@ -16,7 +16,7 @@ import '_base_game_screen.dart';
 // ─────────────────────────────────────────────────────────────
 // CONSTANTE : Nombre de cartes PAR CATÉGORIE (dont 1 correcte)
 // ─────────────────────────────────────────────────────────────
-const int kCardsPerCategory = 4;
+const int kCardsPerCategory = 5;
 
 // ─────────────────────────────────────────────────────────────
 // ENTRÉE DE L'ÉCRAN
@@ -135,6 +135,15 @@ class _FichePersoGameState extends State<_FichePersoGame>
   // ─────────────────────────────────────────────────────────
   // PARSING — génère les cartes par catégorie depuis le JSON
   // ─────────────────────────────────────────────────────────
+
+  String? _currentPlayerName() {
+    final uid = SessionService().currentUid;
+    if (uid?.isEmpty != false) return null;
+    final players = widget.data['players'] as Map<String, dynamic>?;
+    if (players == null) return null;
+    final player = players[uid] as Map<String, dynamic>?;
+    return player?['name'] as String?;
+  }
 
   FichePersoQuestion _parseQuestion() {
     return FichePersoQuestion.fromMap(
@@ -395,13 +404,17 @@ class _FichePersoGameState extends State<_FichePersoGame>
             seconds: _reviewSeconds,
             ratio:   ratio.clamp(0, 1),
             isLow:   false,
-            label:   'Correction dans',
+            label:   'Temps restant de la correction',
             color:   Colors.green,
           ),
           const SizedBox(height: 10),
 
           // Affiche correction
-          _ReviewBoard(question: _question, placed: _placed),
+          _ReviewBoard(
+            question:   _question,
+            placed:      _placed,
+            playerName: _currentPlayerName(),
+          ),
 
           const SizedBox(height: 16),
           Center(
@@ -964,7 +977,7 @@ class _CharacterSummary extends StatelessWidget {
                     .map((slot) {
                   final value = placed[slot.champ];
                   return Chip(
-                    label: Text(value ?? slot.label, overflow: TextOverflow.ellipsis),
+                    label: Text(value ?? slot.label, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.black)),
                     backgroundColor: value != null ? Colors.green.shade50 : Colors.grey.shade100,
                     deleteIcon: value != null ? const Icon(Icons.close, size: 16) : null,
                     onDeleted: value != null ? () => onRemove(slot.champ) : null,
@@ -991,9 +1004,9 @@ class _InfoRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('$label : ', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+          Text('$label : ', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13, color: Colors.black)),
           Expanded(
-            child: Text(value, style: const TextStyle(fontSize: 13), maxLines: 2, overflow: TextOverflow.ellipsis),
+            child: Text(value, style: const TextStyle(fontSize: 13, color: Colors.black), maxLines: 2, overflow: TextOverflow.ellipsis),
           ),
         ],
       ),
@@ -1129,8 +1142,13 @@ class _SubmitButton extends StatelessWidget {
 class _ReviewBoard extends StatelessWidget {
   final FichePersoQuestion  question;
   final Map<String, String> placed;
+  final String?           playerName;
 
-  const _ReviewBoard({required this.question, required this.placed});
+  const _ReviewBoard({
+    required this.question,
+    required this.placed,
+    this.playerName,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1150,9 +1168,20 @@ class _ReviewBoard extends StatelessWidget {
               Row(children: [
                 const Icon(Icons.fact_check_rounded, color: Color(0xFF3949AB), size: 22),
                 const SizedBox(width: 8),
-                Text(question.fiche.nom, style: const TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xFF283593),
-                )),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(question.fiche.nom, style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xFF283593),
+                      )),
+                      if (playerName != null && playerName!.isNotEmpty)
+                        Text('Réponse de $playerName', style: TextStyle(
+                          fontSize: 13, color: Colors.black.withOpacity(0.65),
+                        )),
+                    ],
+                  ),
+                ),
               ]),
               const SizedBox(height: 12),
               const Divider(height: 1),
@@ -1198,7 +1227,7 @@ class _ReviewBoard extends StatelessWidget {
                             ),
                           ]),
                           const SizedBox(height: 3),
-                          Text(expected, style: const TextStyle(
+                          Text(expected, style: TextStyle(color: Colors.black.withOpacity(0.6), 
                             fontSize: 11, fontWeight: FontWeight.w800,
                           ), maxLines: 2, overflow: TextOverflow.ellipsis),
                           if (!isVisible && playerVal.isNotEmpty && !isOk)

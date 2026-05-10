@@ -138,7 +138,7 @@ class LobbyScreen extends ConsumerWidget {
                                     ),
                                     const SizedBox(height: 12),
                                     Text(
-                                      'En attente du Game Master…',
+                                      'En attente du démarrage du jeu...',
                                       style: TextStyle(color: Colors.blueGrey[400], fontWeight: FontWeight.w500),
                                     ),
                                     
@@ -155,7 +155,7 @@ class LobbyScreen extends ConsumerWidget {
                                           const SizedBox(width: 8),
                                           Text(
                                             '${session.players.length} joueur(s) en ligne',
-                                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: primaryBlue),
                                           ),
                                         ],
                                       ),
@@ -205,7 +205,7 @@ class LobbyScreen extends ConsumerWidget {
         ),
         title: Text(
           player.name,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: primaryColor),
         ),
         trailing: player.isReady
             ? const Icon(Icons.check_circle, color: Colors.green, size: 24)

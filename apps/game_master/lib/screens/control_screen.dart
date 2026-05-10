@@ -51,25 +51,43 @@ class _ControlScreenState extends State<ControlScreen> {
 
             // Timer pour auto-end round
             _timer?.cancel();
-            if (session.roundIsPlaying && session.roundRemainingSeconds == 0) {
-              service.endRound(widget.sessionCode);
+            if (session.roundIsPlaying) {
+              final remaining = session.roundRemainingSeconds;
+              if (remaining <= 0) {
+                service.endRound(widget.sessionCode);
+              } else {
+                _timer = Timer(Duration(seconds: remaining), () {
+                  if (mounted) service.endRound(widget.sessionCode);
+                });
+              }
             } else if (session.roundIsEnded && session.isPlaying) {
               // Attendre 2 secondes puis passer en review
               _timer = Timer(const Duration(seconds: 2), () {
                 if (mounted) service.showReview(widget.sessionCode);
               });
             } else if (session.isReviewing) {
-              // Attendre reviewTimeSeconds puis passer à la question suivante
-              _timer = Timer(Duration(seconds: session.reviewTimeSeconds), () {
+              final remaining = session.reviewRemainingSeconds;
+              if (remaining <= 0) {
+                final isLast = session.currentQuestionIndex >= session.totalQuestions - 1;
                 if (mounted) {
-                  final isLast = session.currentQuestionIndex >= session.totalQuestions - 1;
                   if (!isLast) {
                     service.drawNextPersonnage(widget.sessionCode);
                   } else {
                     service.endGame(widget.sessionCode);
                   }
                 }
-              });
+              } else {
+                _timer = Timer(Duration(seconds: remaining), () {
+                  if (mounted) {
+                    final isLast = session.currentQuestionIndex >= session.totalQuestions - 1;
+                    if (!isLast) {
+                      service.drawNextPersonnage(widget.sessionCode);
+                    } else {
+                      service.endGame(widget.sessionCode);
+                    }
+                  }
+                });
+              }
             }
 
             return Scaffold(

@@ -31,7 +31,7 @@ class _CreateSessionScreenState extends State<CreateSessionScreen> {
       final session = await service.createSession(
         gameType: _selectedType,
         totalQuestions: _totalQuestions,
-        roundTimeSeconds: _roundDuration,
+        roundTimeSeconds: _selectedType == GameType.vraiFaux ? 10 : 60,
         sameCardForAll: _sameCardForAll,
       );
 

@@ -2,9 +2,9 @@
     "meta": {
       "jeu": "vrai_faux",
       "language": "FR",
-      "version": "2.0",
+      "version": "3.0",
       "description": "100 questions basées sur la Traduction du Monde Nouveau et les enseignements des Témoins de Jéhovah",
-      "difficulty_levels": ["Facile", "Moyenne", "Difficile"]
+      "difficulty_levels": ["Très Facile", "Facile", "Moyenne", "Difficile", "Très Difficile"]
     },
     "questions": [
       {

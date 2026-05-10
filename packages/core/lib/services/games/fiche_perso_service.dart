@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../models/games/fiche_perso.dart';
 import '../../models/session.dart';
 import '../../services/json_loader.dart';
 

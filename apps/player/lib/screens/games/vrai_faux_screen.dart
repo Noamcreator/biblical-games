@@ -133,7 +133,7 @@ class _VraiFauxGameState extends State<_VraiFauxGame>
   // ─────────────────────────────────────────────────────────
 
   void _startRound() {
-    final secs = widget.data['roundTimeSeconds'] as int? ?? 30;
+    final secs = widget.data['roundTimeSeconds'] as int? ?? 10;
     setState(() {
       _roundSeconds = secs;
       _phase        = _Phase.playing;
@@ -220,7 +220,7 @@ class _VraiFauxGameState extends State<_VraiFauxGame>
 
     _roundTimer?.cancel();
 
-    const secs = 10;
+    final secs = widget.data['reviewTimeSeconds'] as int? ?? 10;
 
     setState(() {
       _phase = _Phase.review;
@@ -266,7 +266,7 @@ class _VraiFauxGameState extends State<_VraiFauxGame>
   // ── Phase JEU ───────────────────────────────────────────
 
   Widget _buildPlaying() {
-    final total = widget.data['roundTimeSeconds'] as int? ?? 30;
+    final total = widget.data['roundTimeSeconds'] as int? ?? 10;
     final ratio = total > 0 ? _roundSeconds / total : 0.0;
     final isLow = _roundSeconds <= 10;
 
@@ -456,7 +456,7 @@ class _VraiFauxGameState extends State<_VraiFauxGame>
                         : isCorrect
                             ? '🎉 Correct !'
                             : '❌ Raté !',
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(color: isCorrect ? Colors.green : Colors.red),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -469,7 +469,7 @@ class _VraiFauxGameState extends State<_VraiFauxGame>
                     const SizedBox(height: 8),
                     Text(
                       'Votre réponse : ${_selected! ? "VRAI" : "FAUX"}',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: _selected! ? Colors.green : Colors.red),
                     ),
                   ],
                 ],

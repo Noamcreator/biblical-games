@@ -11,6 +11,7 @@ class FichePersoLibrary {
   final List<String> historicalPeriods;
   final List<String> books;
   final List<String> symbols;
+  final List<String> keyEvents;
 
   const FichePersoLibrary({
     required this.names,
@@ -19,6 +20,7 @@ class FichePersoLibrary {
     required this.historicalPeriods,
     required this.books,
     required this.symbols,
+    required this.keyEvents,
   });
 
   factory FichePersoLibrary.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class FichePersoLibrary {
       historicalPeriods:List<String>.from(json['historical_periods'] as List),
       books:            List<String>.from(json['books']              as List),
       symbols:          List<String>.from(json['symbols']            as List),
+      keyEvents:        List<String>.from(json['key_events']         as List),
     );
   }
 
@@ -39,6 +42,7 @@ class FichePersoLibrary {
   String resolvePeriod(int i)     => historicalPeriods[i];
   String resolveBook(int i)       => books[i];
   String resolveSymbol(int i)     => symbols[i];
+  String resolveKeyEvent(int i)   => keyEvents[i];
 
   // ── Résolutions multiples (jointure) ─────────────────────
   String joinNames(List<int> indices) =>
@@ -129,7 +133,7 @@ class FichePersoPersonnage extends Equatable {
       relations:         lib.resolveRelations(relationIndices),
       livreBible:        lib.joinBooks(bookIndices),
       symbole:           lib.joinSymbols(symbolIndices),
-      evenementMarquant: json['key_event']      as String,
+      evenementMarquant: lib.resolveKeyEvent(json['key_event_index'] as int),
       difficulte:        difficultyLevels[json['difficulty_index'] as int],
     );
   }
@@ -324,11 +328,6 @@ class FichePersoGameConfig {
           .toList(),
     );
   }
-
-  FichePersoPersonnage? findById(String id) {
-    try { return personnages.firstWhere((p) => p.id == id); } catch (_) { return null; }
-  }
-
   /// Génère une pioche mélangée (liste d'IDs)
   List<String> generatePioche() {
     final ids = personnages.map((p) => p.id).toList()..shuffle();

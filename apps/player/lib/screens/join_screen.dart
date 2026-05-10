@@ -254,7 +254,7 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
             hintText: hint,
             hintStyle: const TextStyle(fontSize: 14, color: Colors.grey),
             labelStyle: const TextStyle(fontSize: 14, color: Colors.deepPurple),
-            prefixIcon: Icon(icon, size: 22),
+            prefixIcon: Icon(icon, size: 22, color: Colors.blueGrey[400]),
             filled: true,
             fillColor: Colors.grey[50],
             border: OutlineInputBorder(

@@ -13,7 +13,7 @@ dependencies:
     path: ../../packages/core
   firebase_core: ^4.7.0
   firebase_storage: ^13.3.0
-  go_router: ^17.2.2
+  go_router: ^17.2.3
   flutter_riverpod: ^3.3.1
   image_picker: ^1.2.2
   flutter_launcher_icons: ^0.14.4

@@ -12,7 +12,7 @@ abstract class GameService {
   Future<Session> createSession({
     required GameType gameType,
     required int totalQuestions,
-    int roundTimeSeconds = 60,
+    int roundTimeSeconds = 10,
     bool sameCardForAll = true,
   });
 
